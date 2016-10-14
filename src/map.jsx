@@ -3,7 +3,9 @@ import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
 
 import MapAccessor from './utils/map-accessor';
-import { diff, updateMapOptions, updateStyle } from './utils';
+import { diff } from './utils';
+import { updateOptions as updateMapOptions } from './utils/map';
+import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
 const noop = () => {};
 const move = (target) => ({ command: 'flyTo', args: [target] });
@@ -98,31 +100,79 @@ class Map extends React.Component {
     }
   }
 
-  _click() {
-    // TODO: Query the map and call the this.prop.onClickFeatures
+  _getQueryParams() {
+    return {
+      layerIds: getInteractiveLayerIds(this.props.mapStyle),
+    };
   }
 
-  _hover() {
-    // TODO: Query the map and call the this.prop.onHoverFeatures
+  _simpleQuery(geometry, callback) {
+    if (!callback) {
+      return;
+    }
+    const features = this._map.queryRenderedFeatures(
+      geometry,
+      this._getQueryParams()
+    );
+    if (!features.length && this.props.ignoreEmptyFeatures) {
+      return;
+    }
+    callback(features);
   }
 
-  _onChangeViewport() {
-    // TODO: Obtain map viewport and call the this.prop.onChangeViewport
+  _simpleClick(e) {
+    // Query the map and call the this.prop.onClickFeatures
+    if (!this.props.onClickFeatures) {
+      return;
+    }
+    const boxSize = this.props.clickRadius;
+    const bbox = [
+      [e.point.x - boxSize, e.point.y - boxSize],
+      [e.point.x + boxSize, e.point.y + boxSize],
+    ];
+    this._simpleQuery(bbox, this.props.onClickFeatures);
+  }
+
+  _simpleHover(e) {
+    // Query the map and call the this.prop.onHoverFeatures
+    if (!this.props.onHoverFeatures) {
+      return;
+    }
+    this._simpleQuery(e.point, this.props.onClickFeatures);
+  }
+
+  _onChangeViewport(e) {
+    // Obtain map viewport and call the this.prop.onChangeViewport
+    if (!this.props.onChangeViewport) {
+      return;
+    }
+
+    const [longitude, latitude] = e.target.getCenter();
+    this.onChangeViewport({
+      longitude,
+      latitude,
+      zoom: e.target.getZoom(),
+      pitch: e.target.getPitch(),
+      bearing: e.target.getBearing(),
+      isDragging: this.state.isDragging,
+      startPitch: this.state.startPitch,
+      startBearing: this.state.startBearing,
+    });
   }
 
   _updateConvenienceHandlers(nextProps) {
     if (diff('onClickFeatures', this.props, nextProps)) {
       if (nextProps.onClickFeatures) {
-        this._map.on('click', this._click);
+        this._map.on('click', this._simpleClick);
       } else {
-        this._map.off('click', this._click);
+        this._map.off('click', this._simpleClick);
       }
     }
     if (diff('onHoverFeatures', this.props, nextProps)) {
       if (nextProps.onHoverFeatures) {
-        this._map.on('move', this._hover);
+        this._map.on('move', this._simpleHover);
       } else {
-        this._map.off('move', this._hover);
+        this._map.off('move', this._simpleHover);
       }
     }
     if (diff('onChangeViewport', this.props, nextProps)) {
@@ -210,6 +260,7 @@ Map.propTypes = {
   containerWidth: React.PropTypes.number,
   containerHeight: React.PropTypes.number,
 
+  // Mapbox access token
   accessToken: React.PropTypes.string,
 
   // Main style
@@ -248,17 +299,13 @@ Map.propTypes = {
   minZoom: React.PropTypes.number,
   maxZoom: React.PropTypes.number,
   maxBounds: React.PropTypes.object,
-
   hashDisabled: React.PropTypes.bool,
   interactiveDisabled: React.PropTypes.bool,
-
   bearingSnap: React.PropTypes.number,
   mapClasses: React.PropTypes.arrayOf(React.PropTypes.string),
   attributionControlDisabled: React.PropTypes.bool,
-
   failIfMajorPerformanceCaveatDisabled: React.PropTypes.bool,
   preserveDrawingBufferDisabled: React.PropTypes.bool,
-
   children: React.PropTypes.any,
 };
 
@@ -294,6 +341,8 @@ Map.defaultProps = {
   zoom: 1,
   bearing: 0,
   pitch: 0,
+
+  clickRadius: 15,
 
   move,
 };

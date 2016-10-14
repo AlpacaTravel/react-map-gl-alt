@@ -115,7 +115,7 @@ class Evented {
 
   notifyMapEventListeners(listeners, args) {
     const mapMouseEventClone = _.cloneDeep(args[0]);
-    mapMouseEventClone.target = this._mapAccessor;
+    mapMouseEventClone.target = this._mapAccessor; // Accessor map only!
     listeners.forEach((listener) => {
       listener(mapMouseEventClone);
     });

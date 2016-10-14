@@ -8,14 +8,14 @@ through this library.
 Objectives
 * Use the latest available mapbox-gl-js release without version locking (Done)
 * Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
-* Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (In Progress)
+* Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
 * Allow safe access to use queryRenderedFeatures etc. (Done)
 * Provide a mechanism to support all mapbox-gl-js camera/animation controls (Done)
 * Use standard interactions (support for touch, scroll zoom etc) (Done)
 * Expose ability to turn on/off handlers (e.g. BoxZoom, ScrollZoom, DoubleClickZoom) (Done)
 * Use Immutable and mapbox-gl-js-style-spec for diffStyles (Done)
 * Use setData for geojson sources (Done)
-* API similar to current react-map-gl MapGL object props (In Progress)
+* API similar to current react-map-gl MapGL object props (Done)
 * Support for all current Uber overlays (In Progress)
 * Support for width/height 100% etc (TODO)
 
