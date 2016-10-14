@@ -1,0 +1,25 @@
+{
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true,
+      "jsx": true,
+      "experimentalObjectRestSpread": true,
+      "destructuring": true
+    }
+  },
+  "rules": {
+    "new-cap": [2, { "capIsNewExceptions": ["List", "Map", "Seq", "Immutable", "Dimensions", "ViewportMercator", "Promise"] }],
+    "one-var": [0],
+    "no-underscore-dangle": [0],
+    "no-console": [0],
+    "max-len": [0]
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true
+  }
+}
