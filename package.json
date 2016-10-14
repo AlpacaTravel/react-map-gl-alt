@@ -40,12 +40,15 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.1.1",
     "gl": "^4.0.2",
+    "global": "^4.3.1",
     "istanbul": "^0.4.5",
     "jsdom": "^8.5.0",
     "json2mq": "^0.2.0",
     "mocha": "^2.5.3",
     "mocha-sinon": "^1.1.6",
     "nyc": "^8.3.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "sinon": "^1.17.5"
   }
 }

@@ -19,12 +19,38 @@ Objectives
 * Support for all current Uber overlays (In Progress)
 * Support for width/height 100% etc (TODO)
 
-Motivations
-Ubers' react-map-gl is great.
 
-But, for our use case, the implementation choice they have chosen has proved
-to be quite strict. Choosing to add a lot of control over mapbox-gl means that
-it must try and recreate a lot of what mapbox-gl has under the hood already
-in order to maintain the chosen approach.
+```
+const hover = (e) => {
+  // Access features under cursor through safe non-mutable map accessor
+  const features = e.target.queryRenderedFeatures(e.point);
+  // ...
+}
 
-I hope it can help others out as an alternative.
+// Can update center/zoom etc to move
+return (
+  <Map
+    accessToken={...}
+    style={...}
+    center={...}
+    zoom={...}
+    bearing={...}
+    pitch={...}
+    move={(target) => (['flyTo', {
+      ...target,
+      // Use animation options etc.
+      speed: 1.5,
+      curve: 1.8,
+    }])}
+    scrollZoomDisabled={false}
+  >
+    <MapEvents
+      onLoad={() => { this.setState({ loaded: true }); }}
+      onError={(err) => console.error(err)}
+      onMouseMove={hover}
+      onMove={...}
+      onClick={...}
+    />
+  </Map>
+);
+```
