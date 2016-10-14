@@ -1,0 +1,51 @@
+{
+  "name": "react-map-gl-alt",
+  "version": "0.0.1",
+  "description": "A React Component for Mapbox-gl-js",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cammanderson/react-map-gl-alt.git"
+  },
+  "keywords": [
+    "react",
+    "mapbox-gl",
+    "mapbox",
+    "vector",
+    "map"
+  ],
+  "author": "Cam Manderson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cammanderson/react-map-gl-alt/issues"
+  },
+  "homepage": "https://github.com/cammanderson/react-map-gl-alt#readme",
+  "dependencies": {
+    "mapbox-gl": "^0.26.0",
+    "mapbox-gl-style-spec": "^8.8.1"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "enzyme": "^2.4.1",
+    "eslint": "^2.13.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.1.1",
+    "gl": "^4.0.2",
+    "istanbul": "^0.4.5",
+    "jsdom": "^8.5.0",
+    "json2mq": "^0.2.0",
+    "mocha": "^2.5.3",
+    "mocha-sinon": "^1.1.6",
+    "nyc": "^8.3.0",
+    "sinon": "^1.17.5"
+  }
+}

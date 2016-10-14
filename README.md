@@ -13,7 +13,7 @@ Objectives
 * Provide a mechanism to support all mapbox-gl-js camera/animation controls (Done)
 * Use standard interactions (support for touch, scroll zoom etc) (Done)
 * Expose ability to turn on/off handlers (e.g. BoxZoom, ScrollZoom, DoubleClickZoom) (Done)
-* Use mapbox-gl-js-style-spec for diffStyles (Done)
+* Use Immutable and mapbox-gl-js-style-spec for diffStyles (Done)
 * Use setData for geojson sources (Done)
 * API similar to current react-map-gl MapGL object props (In Progress)
 * Support for all current Uber overlays (In Progress)

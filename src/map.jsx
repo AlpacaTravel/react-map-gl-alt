@@ -1,19 +1,13 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
-import { diffStyles } from 'mapbox-gl-style-spec'
 
 import MapAccessor from './utils/map-accessor';
 import { diff, updateMapOptions, updateStyle } from './utils';
 
 const noop = () => {};
-const move = (target) => {
-  return { command: 'flyTo', args: [target] };
-};
+const move = (target) => ({ command: 'flyTo', args: [target] });
 
-/**
- *
- */
 class Map extends React.Component {
   static supported() {
     return mapboxgl.supported();
@@ -40,6 +34,17 @@ class Map extends React.Component {
     }
 
     mapboxgl.accessToken = props.accessToken;
+
+    this._click = this._click.bind(this);
+    this._hover = this._hover.bind(this);
+    this._move = this._move.bind(this);
+  }
+
+  // Scrub map access to events
+  getChildContext() {
+    return {
+      map: this._mapAccesor,
+    };
   }
 
   componentDidMount() {
@@ -57,7 +62,7 @@ class Map extends React.Component {
       attributionControl: !this.props.attributionControlDisabled,
       failIfMajorPerformanceCaveat: !this.props.failIfMajorPerformanceCaveatDisabled,
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
-      trackResize: !this.props.trackResize,
+      trackResize: !this.props.trackResizeDisabled,
       center: this.props.center,
       zoom: this.props.center,
       bearing: this.props.bearing,
@@ -68,15 +73,23 @@ class Map extends React.Component {
     this._map = new mapboxgl.Map(options);
     this._mapAccessor = new MapAccessor(this._map);
     updateMapOptions(this._map, {}, this.props);
+
+    // Listen to some of the dispatched events
+    this._map.on('dragstart', (event) => {
+      this.state({ isDragging: true, startDragLngLat: event.lngLat, startBearing: event.target.getBearing(), startPitch: event.target.getPitch() });
+    });
+    this._map.on('dragend', () => {
+      this.state({ isDragging: false, startDragLngLat: null, startBearing: null, startPitch: null });
+    });
   }
 
-  // Scrub map access to events
-  getChildContext = () => ({
-    map: this._mapAccesor,
-  });
+  componentWillReceiveProps(nextProps) {
+    this._updateMapViewport(nextProps);
+    this._updateConvenienceHandlers(nextProps);
 
-  componentDidUpdate() {
-    // update the size?
+    // Update the map style and options
+    updateStyle(this._map, this.props.mapStyle, nextProps.mapStyle);
+    updateMapOptions(this._map, this.props, nextProps);
   }
 
   componentWillUnmount() {
@@ -85,7 +98,43 @@ class Map extends React.Component {
     }
   }
 
-  updateMapViewport(map, nextProps) {
+  _click() {
+    // TODO: Query the map and call the this.prop.onClickFeatures
+  }
+
+  _hover() {
+    // TODO: Query the map and call the this.prop.onHoverFeatures
+  }
+
+  _onChangeViewport() {
+    // TODO: Obtain map viewport and call the this.prop.onChangeViewport
+  }
+
+  _updateConvenienceHandlers(nextProps) {
+    if (diff('onClickFeatures', this.props, nextProps)) {
+      if (nextProps.onClickFeatures) {
+        this._map.on('click', this._click);
+      } else {
+        this._map.off('click', this._click);
+      }
+    }
+    if (diff('onHoverFeatures', this.props, nextProps)) {
+      if (nextProps.onHoverFeatures) {
+        this._map.on('move', this._hover);
+      } else {
+        this._map.off('move', this._hover);
+      }
+    }
+    if (diff('onChangeViewport', this.props, nextProps)) {
+      if (nextProps.onHoverFeatures) {
+        this._map.on('move', this._hover);
+      } else {
+        this._map.off('move', this._hover);
+      }
+    }
+  }
+
+  _updateMapViewport(nextProps) {
     const viewportChanged = (
       diff('center', this.props, nextProps) ||
       diff('zoom', this.props, nextProps) ||
@@ -103,52 +152,42 @@ class Map extends React.Component {
         altitude: nextProps.altitude,
         bearing: nextProps.bearing,
         pitch: nextProps.pitch,
-        {...this.state}
-      }
+        ...this.state,
+      };
 
       // Use a move
-      const command = nextProps.move(target);
+      const result = nextProps.move(target);
       switch (result.command) {
         case 'flyTo':
-          this._map.flyTo(...command.args);
+          this._map.flyTo(...result.args);
           break;
         case 'fitBounds':
-          this._map.fitBounds(...command.args);
+          this._map.fitBounds(...result.args);
           break;
         case 'jumpTo':
-          this._map.jumpTo(...command.args);
+          this._map.jumpTo(...result.args);
           break;
         case 'panTo':
-          this._map.panTo(...command.args);
+          this._map.panTo(...result.args);
           break;
         case 'zoomTo':
-          this._map.zoomTo(...command.args);
+          this._map.zoomTo(...result.args);
           break;
         case 'zoomIn':
-          this._map.zoomIn(...command.args);
+          this._map.zoomIn(...result.args);
           break;
         case 'rotateTo':
-          this._map.rotateTo(...command.args);
+          this._map.rotateTo(...result.args);
           break;
         case 'resetNorth':
-          this._map.rotateTo(...command.args);
+          this._map.rotateTo(...result.args);
           break;
         case 'snapToNorth':
-          this._map.snapToNorth(...command.args);
+          this._map.snapToNorth(...result.args);
           break;
         default: break;
       }
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.updateMapViewport(this._map, nextProps);
-    updateStyle(this._map, this.props.mapStyle, nextProps.mapStyle)
-    updateMapOptions(this._map, this.props, nextProps);
-  }
-
-  componentDidUpdate() {
-    // Update map size?
   }
 
   render() {
@@ -156,8 +195,9 @@ class Map extends React.Component {
       <div
         ref="container"
         className="map"
-        styles={this.props.containerStyle}>
-
+        styles={this.props.containerStyles}
+      >
+        {this.props.children}
       </div>
     );
   }
@@ -165,6 +205,8 @@ class Map extends React.Component {
 
 Map.propTypes = {
   containerStyles: React.PropTypes.object,
+
+  // React dimensions
   containerWidth: React.PropTypes.number,
   containerHeight: React.PropTypes.number,
 
@@ -173,7 +215,7 @@ Map.propTypes = {
   // Main style
   mapStyle: React.PropTypes.oneOfType([
     React.PropTypes.string,
-    React.PropTypes.object,
+    React.PropTypes.instanceOf(Immutable.Map),
   ]).isRequired,
 
   // Move control actions
@@ -188,6 +230,13 @@ Map.propTypes = {
   doubleClickZoomDisabled: React.PropTypes.bool,
   touchZoomRotateDisabled: React.PropTypes.bool,
   trackResizeDisabled: React.PropTypes.bool,
+
+  // Convenience implementations
+  onChangeViewport: React.PropTypes.func,
+  onHoverFeatures: React.PropTypes.func,
+  ignoreEmptyFeatures: React.PropTypes.bool,
+  onClickFeatures: React.PropTypes.func,
+  clickRadius: React.PropTypes.number,
 
   // Target controls
   center: React.PropTypes.arrayOf(React.PropTypes.number),
@@ -209,6 +258,8 @@ Map.propTypes = {
 
   failIfMajorPerformanceCaveatDisabled: React.PropTypes.bool,
   preserveDrawingBufferDisabled: React.PropTypes.bool,
+
+  children: React.PropTypes.any,
 };
 
 Map.defaultProps = {
@@ -243,10 +294,12 @@ Map.defaultProps = {
   zoom: 1,
   bearing: 0,
   pitch: 0,
+
+  move,
 };
 
 Map.childContextTypes = {
   map: React.PropTypes.object,
-}
+};
 
 export default Map;
