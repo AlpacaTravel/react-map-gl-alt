@@ -1,6 +1,7 @@
 # react-map-gl-alt
-react-map-gl-alt provides a React friendly API wrapper around Mapbox GL JS. A
-webGl based vector tile mapping library.
+react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
+API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
+based vector tile mapping library.
 
 This project proposes changes to the react-map-gl implementation approach to try
 and support more of the mapbox-gl-js api spec and interactions. Still keeping
@@ -81,7 +82,7 @@ return (
 );
 ```
 
-### Usage using react-map-gl prop helpers
+### Usage using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
 
 ```jsx
 import Map from 'react-map-gl-alt';
@@ -97,6 +98,10 @@ import Map from 'react-map-gl-alt';
 ```
 
 ### Support for existing react-map-gl overlays
+
+As this library produces the viewport containing the similar props as the
+current react-map-gl spec, the existing react-map-gl overlays can be used, as
+well as the other 3rd party overlays (as well as deck.gl etc.)
 
 ```jsx
 import Map from 'react-map-gl-alt';
