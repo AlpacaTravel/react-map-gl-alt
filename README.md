@@ -1,5 +1,5 @@
 # react-map-gl-alt
-[![Build Status](https://travis-ci.org/cammanderson/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/cammanderson/react-map-gl-alt)
+[![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
 
 react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
