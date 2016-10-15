@@ -19,7 +19,7 @@ class Map extends React.Component {
     super(props, context);
 
     this.state = {
-      isSupported: Map.isSupported(),
+      isSupported: Map.supported(),
       isDragging: false,
       startDragLngLat: null,
       startBearing: null,
@@ -35,11 +35,11 @@ class Map extends React.Component {
       this.componentDidUpdate = noop;
     }
 
-    mapboxgl.accessToken = props.accessToken;
+    mapboxgl.accessToken = props.mapboxApiAccessToken;
 
-    this._click = this._click.bind(this);
-    this._hover = this._hover.bind(this);
-    this._move = this._move.bind(this);
+    this._simpleClick = this._simpleClick.bind(this);
+    this._simpleHover = this._simpleHover.bind(this);
+    this._onChangeViewport = this._onChangeViewport.bind(this);
   }
 
   // Scrub map access to events
@@ -245,7 +245,7 @@ class Map extends React.Component {
       <div
         ref="container"
         className="map"
-        styles={this.props.containerStyles}
+        style={this.props.containerStyles}
       >
         {this.props.children}
       </div>
@@ -261,7 +261,7 @@ Map.propTypes = {
   containerHeight: React.PropTypes.number,
 
   // Mapbox access token
-  accessToken: React.PropTypes.string,
+  mapboxApiAccessToken: React.PropTypes.string,
 
   // Main style
   mapStyle: React.PropTypes.oneOfType([
