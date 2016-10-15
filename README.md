@@ -43,7 +43,6 @@ mapbox-gl-js as of 0.25.0.
 const hover = (e) => {
   // Access features under cursor through safe non-mutable map accessor
   const features = e.target.queryRenderedFeatures(e.point);
-  // ...
 }
 const move = (e) => {
   // Differentiate user interaction versus flyTo

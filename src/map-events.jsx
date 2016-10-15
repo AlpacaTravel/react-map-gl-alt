@@ -3,21 +3,26 @@ import { diff } from './utils';
 
 class MapEvents extends React.Component {
   componentDidMount() {
-    // TODO: Wire the actions up to the props
     this._updateListeners({}, this.props);
   }
 
   componentDidUpdate(nextProps) {
-    // TODO: Update the evented
     this._updateListeners(this.props, nextProps);
+  }
+
+  componentWillUnmount() {
+    this._updateListeners(this.props, {});
   }
 
   _updateListener(type, current, next) {
     if (diff(type, current, next)) {
+      const mapType = type.substr(2).toLowerCase();
       if (current[type]) {
-        context.map.off(type, current[type]);
+        this.context.map.off(mapType, current[type]);
       }
-      context.map.on(type, next[type]);
+      if (next[type]) {
+        this.context.map.on(mapType, next[type]);
+      }
     }
   }
 
@@ -118,7 +123,7 @@ MapEvents.propTypes = {
 };
 
 MapEvents.contextTypes = {
-  map: React.PropTypes.object,
+  map: React.PropTypes.object.isRequired,
 };
 
 export default MapEvents;
