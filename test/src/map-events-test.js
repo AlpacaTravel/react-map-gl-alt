@@ -12,6 +12,16 @@ describe('Map Events component', () => {
       map: {},
     });
   });
+  describe('when mounting', () => {
+    it('will set the listeners');
+  });
+  describe('when receiving props', () => {
+    it('will update listeners');
+  });
+
+  describe('when unmounting', () => {
+    it('will remove listeners');
+  });
 
   it('will register event listeners');
   it('will remove event listeners');

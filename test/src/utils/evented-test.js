@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import Evented from '../../../src/utils/evented';
 
-describe('Evented utils', () => {
+describe('Evented util', () => {
   describe('contructor', () => {
     const on = sinon.spy();
     on.withArgs('resize');
@@ -80,4 +80,6 @@ describe('Evented utils', () => {
     it('will notify');
     it('will update event target with accessor');
   });
+  it('will register listeners');
+  it('will unregister listeners');
 });
