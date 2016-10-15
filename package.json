@@ -4,7 +4,7 @@
   "description": "A React wrapper for Mapbox-GL-JS",
   "main": "index.js",
   "files": [
-    "src",
+    "src"
   ],
   "scripts": {
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",
