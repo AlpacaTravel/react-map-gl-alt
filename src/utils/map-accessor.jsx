@@ -1,7 +1,7 @@
 import Evented from './evented';
 
 class MapAccessor {
-  constuctor(map) {
+  constructor(map) {
     this._map = map;
     this._evented = new Evented(map, this);
   }
@@ -14,49 +14,49 @@ class MapAccessor {
     return this;
   }
   hasClass(klass) {
-    return this.map.hasClass(klass);
+    return this._map.hasClass(klass);
   }
   getClasses() {
-    return this.map.getClasses();
+    return this._map.getClasses();
   }
   getBounds() {
-    return this.map.getBounds();
+    return this._map.getBounds();
   }
   project(lnglat) {
-    return this.map.project(lnglat);
+    return this._map.project(lnglat);
   }
   unproject(point) {
-    return this.map.unproject(point);
+    return this._map.unproject(point);
   }
   queryRenderedFeatures(...args) {
-    return this.map.queryRenderedFeatures(...args);
+    return this._map.queryRenderedFeatures(...args);
   }
   querySourceFeatures(...args) {
-    return this.map.querySourceFeatures(...args);
+    return this._map.querySourceFeatures(...args);
   }
   getContainer() {
-    return this.map.getContainer();
+    return this._map.getContainer();
   }
   getCanvasContainer() {
-    return this.map.getCanvasContainer();
+    return this._map.getCanvasContainer();
   }
   getCanvas() {
-    return this.map.getCanvas();
+    return this._map.getCanvas();
   }
   loaded() {
-    return this.map.loaded();
+    return this._map.loaded();
   }
   getCenter() {
-    return this.map.getCenter();
+    return this._map.getCenter();
   }
   getZoom() {
-    return this.map.getZoom();
+    return this._map.getZoom();
   }
   getBearing() {
-    return this.map.getBearing();
+    return this._map.getBearing();
   }
   getPitch() {
-    return this.map.getPitch();
+    return this._map.getPitch();
   }
 }
 
