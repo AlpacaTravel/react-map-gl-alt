@@ -1,12 +1,11 @@
 {
   "name": "react-map-gl-alt",
   "version": "0.1.0",
-  "description": "A React Component for Mapbox-gl-js",
+  "description": "A React wrapper for Mapbox-GL-JS",
   "main": "index.js",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
+  "files": [
+    "src",
+  ],
   "scripts": {
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",
     "test": "npm run lint && npm run test:mocha",
@@ -15,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cammanderson/react-map-gl-alt.git"
+    "url": "https://github.com/AlpacaTravel/react-map-gl-alt.git"
   },
   "keywords": [
     "react",
