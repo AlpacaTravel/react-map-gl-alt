@@ -9,8 +9,9 @@
   },
   "scripts": {
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",
-    "test": "mocha --compilers js:babel-core/register --require ./test/setup.js --recursive --timeout=6000 -R nyan ./test",
-    "test:coverage": "node ./node_modules/nyc/bin/nyc.js npm run test"
+    "test": "npm run lint && npm run test:mocha",
+    "test:mocha": "mocha --compilers js:babel-core/register --require ./test/setup.js --recursive --timeout=6000 -R nyan ./test",
+    "test:coverage": "node ./node_modules/nyc/bin/nyc.js npm run test:mocha"
   },
   "repository": {
     "type": "git",
