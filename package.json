@@ -1,6 +1,6 @@
 {
   "name": "react-map-gl-alt",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A React Component for Mapbox-gl-js",
   "main": "index.js",
   "directories": {

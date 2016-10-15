@@ -1,9 +1,15 @@
+# react-map-gl-alt
+react-map-gl-alt provides a React friendly API wrapper around Mapbox GL JS. A
+webGl based vector tile mapping library.
+
 This project proposes changes to the react-map-gl implementation approach to try
 and support more of the mapbox-gl-js api spec and interactions. Still keeping
 to the react single directional goals of react-map-gl, the Map is exposed in
 a non-mutatable fashion.
 
-# Objectives
+The mapbox-gl-js can be controlled/stateless as part of your app.
+
+## Objectives
 * Use the latest available mapbox-gl-js release without version locking (Done)
 * Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
 * Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
@@ -18,8 +24,19 @@ a non-mutatable fashion.
 * Support for all current Uber overlays (In Progress)
 * Support for width/height 100% etc (In Progress)
 
+## Overview
 
-# Example use (crude)
+### Installation (experimental)
+
+```
+npm install react-map-gl-alt --save
+```
+
+This package works with compatible mapbox-gl-js build approaches, including
+webpack. This library supports the current 'dist' method recommended by
+mapbox-gl-js as of 0.25.0.
+
+### Usage (showing map accessor interaction with map events)
 
 ```jsx
 const hover = (e) => {
@@ -27,46 +44,73 @@ const hover = (e) => {
   const features = e.target.queryRenderedFeatures(e.point);
   // ...
 }
+const move = (e) => {
+  // Differentiate user interaction versus flyTo
+  if (e.originalEvent) {
+    console.log('A human moved the map');
+  }
+  // Access map props (no mutation possible)
+  console.log(e.target.getCenter(), e.target.getZoom());
+}
 
 // Can update center/zoom etc to move
 return (
   <Map
-    accessToken={...}
-    style={...}
+    mapboxApiAccessToken={...}
+    mapStyle={...}
     center={...}
     zoom={...}
     bearing={...}
     pitch={...}
     move={(target) => ({ command: 'flyTo', args: [{
       ...target,
-      // Use animation options etc.
+      // Use animation options, duration etc.
       speed: 1.5,
       curve: 1.8,
     }])}
-    scrollZoomDisabled={false}
+    scrollZoomDisabled={true}
   >
     <MapEvents
       onLoad={() => { this.setState({ loaded: true }); }}
-      onError={(err) => console.error(err)}
+      onError={console.error}
       onMouseMove={hover}
-      onMove={...}
+      onMove={move}
       onClick={...}
     />
   </Map>
 );
 ```
 
-# Compatibility with existing react-map-gl projects
+### Usage using react-map-gl prop helpers
 
-A project goal is to support similar behaviours of the existing react-map-gl
-prop spec.
+```jsx
+import Map from 'react-map-gl-alt';
 
-Some slight changes exist currently.
+// ...
 
-*containerWidth / containerHeight*
-Chosen to use containerWidth and containerHeight props opposed to width/height
-props (to support % based with react-dimensions). May implement HOC component
-to make more convenient.
+<Map width={400} height={400} longitude={144.9633200} latitude={-37.8140000}
+  zoom={8} onChangeViewport={(viewport) => {
+    const { latitude, longitude, zoom } = viewport;
+    // Optionally this.setState({ viewport }); etc
+  }}
+/>
+```
+
+### Support for existing react-map-gl overlays
+
+```jsx
+import Map from 'react-map-gl-alt';
+
+<Map {...viewport}>
+  <ScatterplotOverlay
+    {...viewport}
+    locations={locations}
+    dotRadius={4}
+    globalOpacity={1}
+    compositeInteraction="screen" />
+  // Add additional overlays etc here...
+</Map>
+```
 
 # Testing
 
