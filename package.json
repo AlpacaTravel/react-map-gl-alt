@@ -26,9 +26,9 @@
   "author": "Cam Manderson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cammanderson/react-map-gl-alt/issues"
+    "url": "https://github.com/AlpacaTravel/react-map-gl-alt/issues"
   },
-  "homepage": "https://github.com/cammanderson/react-map-gl-alt#readme",
+  "homepage": "https://github.com/AlpacaTravel/react-map-gl-alt#readme",
   "dependencies": {
     "mapbox-gl": "^0.26.0",
     "mapbox-gl-style-spec": "^8.8.1"
