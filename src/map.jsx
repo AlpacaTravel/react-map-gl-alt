@@ -19,7 +19,7 @@ class Map extends React.Component {
     super(props, context);
 
     this.state = {
-      isSupported: Map.supported(),
+      // isSupported: Map.supported(),
       isDragging: false,
       isTouching: false,
       isZooming: false,
