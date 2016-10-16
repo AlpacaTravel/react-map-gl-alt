@@ -86,6 +86,10 @@ class Map extends React.Component {
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
+
+    // Initial actions
+    this._updateMapViewport(this.props);
+    this._updateConvenienceHandlers(this.props);
     updateMapOptions(this._map, {}, this.props);
 
     // Listen to some of the dispatched events
@@ -95,8 +99,6 @@ class Map extends React.Component {
   componentWillReceiveProps(nextProps) {
     this._updateMapViewport(nextProps);
     this._updateConvenienceHandlers(nextProps);
-
-    // Update the map style and options
     updateStyle(this._map, this.props.mapStyle, nextProps.mapStyle);
     updateMapOptions(this._map, this.props, nextProps);
   }

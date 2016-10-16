@@ -16,6 +16,8 @@ describe('Map component', () => {
   });
   describe('while mounting', () => {
     it('will set the options correctly');
+    it('will set the initial viewport');
+    it('registers to the state handlers');
   });
   describe('while unmounting', () => {
     it('will call map remove on unmount');
@@ -25,6 +27,8 @@ describe('Map component', () => {
     it('will call update styles');
     it('will call update the viewport');
     it('will call update convenience handlers');
+    it('will set center based on supplied latitude/longitude');
+    it('will preference center over supplied latitude/longitude');
   });
   it('will pass the map facade to children context');
   describe('when updating viewport', () => {
@@ -37,6 +41,6 @@ describe('Map component', () => {
   describe('conenience methods', () => {
     it('onClickFeatures will return features');
     it('onHoverFeatures will return features');
-    it('onChangeViewport will return features');
+    it('onChangeViewport will supply a viewport');
   });
 });

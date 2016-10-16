@@ -5,6 +5,7 @@ import TransformFacade from '../../../src/facades/transform';
 
 describe('Transform Facade', () => {
   const transformMock = {
+    // Functions
     coveringZoomLevel: sinon.spy(),
     coveringTiles: sinon.spy(),
     zoomScale: sinon.spy(),
@@ -21,7 +22,6 @@ describe('Transform Facade', () => {
     coordinatePoint: sinon.spy(),
     calculatePosMatrix: sinon.spy(),
   };
-
   const wrapper = new TransformFacade(transformMock);
   it('can expose coveringZoomLevel', () => {
     transformMock.coveringZoomLevel.withArgs('param');

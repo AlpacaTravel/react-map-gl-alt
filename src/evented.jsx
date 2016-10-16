@@ -108,7 +108,11 @@ export default class Evented {
           this.notifyMapEventListeners(listeners, args);
           break;
 
-        default: break;
+        default:
+          listeners.forEach((listener) => {
+            listener();
+          });
+          break;
       }
     }
   }

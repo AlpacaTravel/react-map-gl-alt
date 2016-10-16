@@ -789,6 +789,17 @@ describe('Evented', () => {
       done();
     });
   });
+  describe('while handling unknown events', () => {
+    const type = 'unknown';
+    it('will scrub arguments', () => {
+      const listener = sinon.spy();
+      const event = {};
+      evented.on(type, listener);
+      evented.notifyListeners(type, event);
+      expect(listener.calledOnce);
+      expect(listener.firstCall.args).to.be.empty;
+    });
+  });
   describe('while notifying listeners', () => {
     it('will notify multiple listeners', (done) => {
       const listenerA = sinon.spy();
