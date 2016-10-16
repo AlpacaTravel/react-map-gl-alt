@@ -6,7 +6,7 @@ export const updateOptions = (map, current, next) => {
     map.setMinZoom(next.minZoom);
   }
   if (diff('maxZoom', current, next)) {
-    map.setMinZoom(next.maxZoom);
+    map.setMaxZoom(next.maxZoom);
   }
   if (diff('mapClasses', current, next)) {
     map.setClasses(next.mapClasses);
