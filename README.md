@@ -5,14 +5,8 @@ react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
 based vector tile mapping library.
 
-This project proposes changes to the react-map-gl implementation approach to try
-and support more of the mapbox-gl-js api spec and interactions. Still keeping
-to the react single directional goals of react-map-gl, the Map is exposed in
-a non-mutatable fashion.
-
-The mapbox-gl-js can be controlled/stateless as part of your app.
-
 ## Objectives
+
 * Use the latest available mapbox-gl-js release without version locking (Done)
 * Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
 * Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
@@ -26,6 +20,8 @@ The mapbox-gl-js can be controlled/stateless as part of your app.
 * API similar to current react-map-gl MapGL object props (Done)
 * Support for all current Uber overlays (In Progress)
 * Support for width/height 100% etc (In Progress)
+* Provide a separation for managing viewport interactions (Done)
+* Provide an example controlled viewport interaction component (To Do)
 
 ## Overview
 
@@ -43,7 +39,7 @@ mapbox-gl-js as of 0.25.0.
 
 ```jsx
 const hover = (e) => {
-  // Access features under cursor through safe non-mutable map accessor
+  // Access features under cursor through safe non-mutable map facade
   const features = e.target.queryRenderedFeatures(e.point);
 }
 const move = (e) => {
@@ -57,7 +53,7 @@ const move = (e) => {
 
 // Can update center/zoom etc to move
 return (
-  <Map
+  <MapGL
     mapboxApiAccessToken={...}
     mapStyle={...}
     center={...}
@@ -79,18 +75,120 @@ return (
       onMove={move}
       onClick={...}
     />
-  </Map>
+  </MapGL>
 );
 ```
 
-### Usage using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
+## The Map Facade
+
+To reduce the state managed outside of this component, the component offers a
+facade to the map object. The facade provides all accessor based methods for
+those familiar with the mapbox API spec (e.g. getCenter, getCanvas etc)
+
+This is included along with events from the component/api, replacing the
+exposed 'target' event.
+
+Additionally, the ```cloneTransform``` method is added that supports
+accessing a clone of the current map transform. If you don't want to clone
+transform, the library provides the transform facade.
+
+## Controlling move animations
+
+You can provide new viewport details to the map, and as well have the
+opportunity to control the animation. This allows you to control the Camera and
+Animation options, as well as customise the usual Mapbox API args.
+
+### Supported move animations
+
+* flyTo
+* jumpTo
+* panTo
+* zoomTo
+* zoomIn
+* rotateTo
+
+### Usage with move function
 
 ```jsx
-import Map from 'react-map-gl-alt';
+const move = (target) => ({
+  command: 'flyTo',
+  args: [
+    {
+      ...target, // Standard target viewport
+      // Additional camera/animation options
+      speed: 0.2, // Slow it down
+      curve: 1,
+      // Control the easing
+      easing: function(t) {
+        return t;
+      }
+    }
+  ]
+});
+
+return (
+  <MapGL
+    ...
+    move={move}
+  />
+);
+```
+
+### Controlled animation using React Motion
+
+Supporting stateless behaviour, this library can use React-Motion behaviour.
+
+```jsx
+<Motion style={{
+  latitude: spring(viewport.latitude, { stiffness: 170, damping: 26, precision: 0.000001 }),
+  longitude: spring(viewport.longitude, { stiffness: 170, damping: 26, precision: 0.000001 })
+}}>
+  {({ latitude, longitude }) => <MapGL
+    {...viewport}
+    latitude={latitude}
+    longitude={longitude}
+    mapStyle={mapboxStyle}
+  />}
+</Motion>
+```
+
+### Controlling viewport interactions (stateless map viewport)
+
+If you chose to fully control the viewstate component and control your own
+interactions, you can wrap this component in your own interaction component.
+
+The child context provides access to the read only Map Facade, which supports
+read-only project/unproject/transform as well as a cloneTransform etc.
+
+```jsx
+return (
+  <MapGL
+    {...viewport}
+    interactiveDisabled={true}
+  >
+    <MyInteractiveControls
+      onChangeViewport={(viewport) => this.setState({ viewport })}
+    />
+  </MapGL>
+);
+```
+
+## Differences to react-map-gl
+This project interfaces similar to the react-map-gl component, but aims to build
+a working relationship with mapbox-gl-js in terms of controlled interaction
+and internal state.
+
+This leads to more fluid transitions and support for all mapbox user
+interactions.
+
+### Support using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
+
+```jsx
+import MapGL from 'react-map-gl-alt';
 
 // ...
 
-<Map width={400} height={400} longitude={144.9633200} latitude={-37.8140000}
+<MapGL width={400} height={400} longitude={144.9633200} latitude={-37.8140000}
   zoom={8} onChangeViewport={(viewport) => {
     const { latitude, longitude, zoom } = viewport;
     // Optionally this.setState({ viewport }); etc
@@ -117,6 +215,27 @@ import Map from 'react-map-gl-alt';
   // Add additional overlays etc here...
 </Map>
 ```
+
+### Extended onChangeViewport
+
+This library also exposes several new properties to the viewport state exposed
+through the ```onChangeViewport``` method.
+
+* isDragging
+* isTouching (new)
+* isMoving (new)
+* isZooming (new)
+* startDragLngLat
+* startTouchLngLat (new)
+* startMoveLngLat (new)
+* startZoomLngLat (new)
+* startPitch
+* startBearing
+* userControlled (new)
+* longitude
+* latitude
+* center (new)
+* zoom
 
 # Testing
 

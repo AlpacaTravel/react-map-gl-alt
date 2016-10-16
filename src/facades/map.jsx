@@ -1,9 +1,12 @@
-import Evented from './evented';
+import Evented from '../evented';
+import { cloneTransform } from '../utils/map';
+import Transform from './transform';
 
-class MapAccessor {
+export default class Map {
   constructor(map) {
     this._map = map;
     this._evented = new Evented(map, this);
+    this.transform = new Transform(map.transform);
   }
   on(type, action) {
     this._evented.on(type, action);
@@ -58,6 +61,7 @@ class MapAccessor {
   getPitch() {
     return this._map.getPitch();
   }
+  cloneTransform() {
+    return cloneTransform(this._map.transform);
+  }
 }
-
-export default MapAccessor;

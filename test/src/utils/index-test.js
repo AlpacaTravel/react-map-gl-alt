@@ -28,4 +28,11 @@ describe('Utils', () => {
       expect(diff('foo', { foo: { bar: 1 } }, { foo: { bar: 0 } })).to.equal(true);
     });
   });
+  describe('has() function', () => {
+    it('will respond true when an object has a property');
+    it('will response false when an object does not have a property');
+  });
+  describe('mod() function', () => {
+    it('will correctly mod supplied coordinates');
+  });
 });

@@ -26,7 +26,7 @@ describe('Map component', () => {
     it('will call update the viewport');
     it('will call update convenience handlers');
   });
-  it('will pass the accessor map to children context');
+  it('will pass the map facade to children context');
   describe('when updating viewport', () => {
     it('will detect viewport changes');
     it('will use the provided move action');

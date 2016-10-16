@@ -2,8 +2,8 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
 
-import MapAccessor from './utils/map-accessor';
-import { diff } from './utils';
+import MapFacade from './facades/map';
+import { diff, has, mod } from './utils';
 import { updateOptions as updateMapOptions } from './utils/map';
 import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
@@ -21,9 +21,17 @@ class Map extends React.Component {
     this.state = {
       isSupported: Map.supported(),
       isDragging: false,
+      isTouching: false,
+      isZooming: false,
+      isMoving: false,
       startDragLngLat: null,
+      startTouchLngLat: null,
+      startZoomLngLat: null,
+      startMoveLngLat: null,
       startBearing: null,
       startPitch: null,
+      startZoom: null,
+      userControlled: false,
       width: props.containerWidth,
       height: props.containerHeight,
     };
@@ -35,7 +43,10 @@ class Map extends React.Component {
       this.componentDidUpdate = noop;
     }
 
-    mapboxgl.accessToken = props.mapboxApiAccessToken;
+    const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
+    if (accessToken) {
+      mapboxgl.accessToken = props.mapboxApiAccessToken;
+    }
 
     this._simpleClick = this._simpleClick.bind(this);
     this._simpleHover = this._simpleHover.bind(this);
@@ -45,7 +56,7 @@ class Map extends React.Component {
   // Scrub map access to events
   getChildContext() {
     return {
-      map: this._mapAccesor,
+      map: this._mapFacade,
     };
   }
 
@@ -73,16 +84,11 @@ class Map extends React.Component {
 
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
-    this._mapAccessor = new MapAccessor(this._map);
+    this._mapFacade = new MapFacade(this._map);
     updateMapOptions(this._map, {}, this.props);
 
     // Listen to some of the dispatched events
-    this._map.on('dragstart', (event) => {
-      this.state({ isDragging: true, startDragLngLat: event.lngLat, startBearing: event.target.getBearing(), startPitch: event.target.getPitch() });
-    });
-    this._map.on('dragend', () => {
-      this.state({ isDragging: false, startDragLngLat: null, startBearing: null, startPitch: null });
-    });
+    this._listenStateEvents();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -149,14 +155,54 @@ class Map extends React.Component {
 
     const [longitude, latitude] = e.target.getCenter();
     this.onChangeViewport({
-      longitude,
+      longitude: mod(longitude + 180, 360) - 180,
       latitude,
       zoom: e.target.getZoom(),
       pitch: e.target.getPitch(),
-      bearing: e.target.getBearing(),
+      bearing: mod(e.target.getBearing() + 180, 360) - 180,
       isDragging: this.state.isDragging,
       startPitch: this.state.startPitch,
       startBearing: this.state.startBearing,
+    });
+  }
+
+  _listenStateEvents() {
+    this._map.on('movestart', (event) => {
+      this.state({
+        startMoveLngLat: event.target.getCenter(),
+        startBearing: event.target.getBearing(),
+        startPitch: event.target.getPitch(),
+        startZoom: event.target.getZoom(),
+        userControlled: (has(event, 'originalEvent')),
+      });
+    });
+    this._map.on('moveend', () => {
+      this.state({
+        startMoveLngLat: null,
+        startBearing: null,
+        startPitch: null,
+        startZoom: null,
+        userControlled: false,
+      });
+    });
+
+    this._map.on('dragstart', (event) => {
+      this.state({ isDragging: true, startDragLngLat: event.lngLat });
+    });
+    this._map.on('dragend', () => {
+      this.state({ isDragging: false, startDragLngLat: null });
+    });
+    this._map.on('zoomstart', (event) => {
+      this.state({ isZooming: true, startZoomLngLat: event.lngLat });
+    });
+    this._map.on('zoomend', () => {
+      this.state({ isZooming: false, startZoomLngLat: null });
+    });
+    this._map.on('touchstart', (event) => {
+      this.state({ isTouching: true, startTouchLngLat: event.lngLat });
+    });
+    this._map.on('touchend', () => {
+      this.state({ isTouching: false, startTouchLngLat: null });
     });
   }
 
@@ -185,10 +231,15 @@ class Map extends React.Component {
   }
 
   _updateMapViewport(nextProps) {
+    // Check if the user is controlling this currently
+    if (this.state.userControlled === true) {
+      return;
+    }
+
     const viewportChanged = (
       diff('center', this.props, nextProps) ||
       diff('zoom', this.props, nextProps) ||
-      diff('altitude', this.props, nextProps) ||
+      // diff('altitude', this.props, nextProps) ||
       diff('bearing', this.props, nextProps) ||
       diff('pitch', this.props, nextProps)
     );
@@ -199,7 +250,7 @@ class Map extends React.Component {
         longitude: nextProps.center[0],
         latitude: nextProps.center[1],
         zoom: nextProps.zoom,
-        altitude: nextProps.altitude,
+        // altitude: nextProps.altitude,
         bearing: nextProps.bearing,
         pitch: nextProps.pitch,
         ...this.state,
@@ -292,7 +343,7 @@ Map.propTypes = {
   // Target controls
   center: React.PropTypes.arrayOf(React.PropTypes.number),
   zoom: React.PropTypes.number,
-  altitude: React.PropTypes.number,
+  // altitude: React.PropTypes.number,
   bearing: React.PropTypes.number,
   pitch: React.PropTypes.number,
 
@@ -349,6 +400,10 @@ Map.defaultProps = {
 
 Map.childContextTypes = {
   map: React.PropTypes.object,
+};
+
+Map.contextTypes = {
+  mapboxApiAccessToken: React.PropTypes.string,
 };
 
 export default Map;

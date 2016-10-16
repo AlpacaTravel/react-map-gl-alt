@@ -1,9 +1,9 @@
 import { describe } from 'mocha';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import Evented from '../../../src/utils/evented';
+import Evented from '../../src/evented';
 
-describe('Evented util', () => {
+describe('Evented', () => {
   describe('contructor', () => {
     const on = sinon.spy();
     on.withArgs('resize');
