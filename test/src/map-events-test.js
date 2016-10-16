@@ -2,15 +2,20 @@ import React from 'react';
 import { describe } from 'mocha';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
+import sinon from 'sinon';
 import MapEvents from '../../src/map-events';
 
-const getMountedComponent = (props, context) => (mount(<MapEvents {...props} />, { context }));
+const defaultProps = {};
+const defaultContext = {
+  map: {},
+};
+const getMountedComponent = (props = defaultProps, context = defaultContext) => (mount(<MapEvents {...props} />, { context }));
 
 describe('Map Events component', () => {
   it('will mount', () => {
-    const component = getMountedComponent({}, {
-      map: {},
-    });
+    sinon.spy(MapEvents.prototype, 'componentDidMount');
+    getMountedComponent();
+    expect(MapEvents.prototype.componentDidMount.calledOnce).to.equal(true);
   });
   describe('when mounting', () => {
     it('will set the listeners');

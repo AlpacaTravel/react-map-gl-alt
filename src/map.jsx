@@ -7,7 +7,7 @@ import { diff, has, mod } from './utils';
 import { updateOptions as updateMapOptions } from './utils/map';
 import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
-const noop = () => {};
+// const noop = () => {};
 const move = (target) => ({ command: 'flyTo', args: [target] });
 
 class Map extends React.Component {
@@ -24,6 +24,7 @@ class Map extends React.Component {
       isTouching: false,
       isZooming: false,
       isMoving: false,
+      isLoaded: false,
       startDragLngLat: null,
       startTouchLngLat: null,
       startZoomLngLat: null, // same as startZoom?
@@ -37,16 +38,16 @@ class Map extends React.Component {
       height: props.containerHeight,
     };
 
-    // Disable updates
-    if (!this.state.isSupported) {
-      this.componentDidMount = noop;
-      this.componentWillReceiveProps = noop;
-      this.componentDidUpdate = noop;
-    }
+    // TODO: Disable updates with limited support? Fails tests..
+    // if (!this.state.isSupported) {
+    //   this.componentDidMount = noop;
+    //   this.componentWillReceiveProps = noop;
+    //   this.componentDidUpdate = noop;
+    // }
 
     const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
     if (accessToken) {
-      mapboxgl.accessToken = props.mapboxApiAccessToken;
+      mapboxgl.accessToken = accessToken;
     }
 
     this._simpleClick = this._simpleClick.bind(this);
@@ -78,7 +79,7 @@ class Map extends React.Component {
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       trackResize: !this.props.trackResizeDisabled,
       center: this.props.center,
-      zoom: this.props.center,
+      // zoom: this.props.center,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
     };
@@ -88,7 +89,6 @@ class Map extends React.Component {
     this._mapFacade = new MapFacade(this._map);
 
     // Initial actions
-    this._updateMapViewport(this.props);
     this._updateConvenienceHandlers(this.props);
     updateMapOptions(this._map, {}, this.props);
 
@@ -171,7 +171,7 @@ class Map extends React.Component {
 
   _listenStateEvents() {
     this._map.on('movestart', (event) => {
-      this.state({
+      this.setState({
         startMoveLngLat: event.target.getCenter(),
         startBearing: event.target.getBearing(),
         startPitch: event.target.getPitch(),
@@ -180,7 +180,7 @@ class Map extends React.Component {
       });
     });
     this._map.on('moveend', () => {
-      this.state({
+      this.setState({
         startMoveLngLat: null,
         startBearing: null,
         startPitch: null,
@@ -190,28 +190,31 @@ class Map extends React.Component {
     });
 
     this._map.on('dragstart', (event) => {
-      this.state({ isDragging: true, startDragLngLat: event.lngLat });
+      this.setState({ isDragging: true, startDragLngLat: event.lngLat });
     });
     this._map.on('dragend', () => {
-      this.state({ isDragging: false, startDragLngLat: null });
+      this.setState({ isDragging: false, startDragLngLat: null });
     });
     this._map.on('zoomstart', (event) => {
-      this.state({ isZooming: true, startZoomLngLat: event.lngLat });
+      this.setState({ isZooming: true, startZoomLngLat: event.lngLat });
     });
     this._map.on('zoomend', () => {
-      this.state({ isZooming: false, startZoomLngLat: null });
+      this.setState({ isZooming: false, startZoomLngLat: null });
     });
     this._map.on('touchstart', (event) => {
-      this.state({ isTouching: true, startTouchLngLat: event.lngLat });
+      this.setState({ isTouching: true, startTouchLngLat: event.lngLat });
     });
     this._map.on('touchend', () => {
-      this.state({ isTouching: false, startTouchLngLat: null });
+      this.setState({ isTouching: false, startTouchLngLat: null });
     });
     this._map.on('rotatestart', (event) => {
-      this.state({ isRotating: true, startRotatingLngLat: event.lngLat });
+      this.setState({ isRotating: true, startRotatingLngLat: event.lngLat });
     });
     this._map.on('rotateend', () => {
-      this.state({ isRotating: false, startRotatingLngLat: null });
+      this.setState({ isRotating: false, startRotatingLngLat: null });
+    });
+    this._map.on('loaded', () => {
+      this.setState({ isLoaded: true });
     });
   }
 

@@ -40,67 +40,67 @@ describe('Map Facade', () => {
   it('can expose hasClass', () => {
     mapMock.hasClass.withArgs('param');
     facade.hasClass('param');
-    expect(mapMock.hasClass.withArgs('param').calledOnce);
+    expect(mapMock.hasClass.withArgs('param').calledOnce).to.equal(true);
   });
   it('can expose getClasses', () => {
     facade.getClasses();
-    expect(mapMock.getClasses.calledOnce);
+    expect(mapMock.getClasses.calledOnce).to.equal(true);
   });
   it('can expose getBounds', () => {
     facade.getBounds();
-    expect(mapMock.getBounds.calledOnce);
+    expect(mapMock.getBounds.calledOnce).to.equal(true);
   });
   it('can expose project', () => {
     mapMock.project.withArgs('param');
     facade.project('param');
-    expect(mapMock.project.withArgs('param').calledOnce);
+    expect(mapMock.project.withArgs('param').calledOnce).to.equal(true);
   });
   it('can expose unproject', () => {
     mapMock.unproject.withArgs('param');
     facade.unproject('param');
-    expect(mapMock.unproject.withArgs('param').calledOnce);
+    expect(mapMock.unproject.withArgs('param').calledOnce).to.equal(true);
   });
   it('can expose queryRenderedFeatures', () => {
     mapMock.queryRenderedFeatures.withArgs('param', 'param');
     facade.queryRenderedFeatures('param', 'param');
-    expect(mapMock.queryRenderedFeatures.withArgs('param', 'param').calledOnce);
+    expect(mapMock.queryRenderedFeatures.withArgs('param', 'param').calledOnce).to.equal(true);
   });
   it('can expose querySourceFeatures', () => {
     mapMock.querySourceFeatures.withArgs('param', 'param');
     facade.querySourceFeatures('param', 'param');
 
-    expect(mapMock.querySourceFeatures.withArgs('param', 'param').calledOnce);
+    expect(mapMock.querySourceFeatures.withArgs('param', 'param').calledOnce).to.equal(true);
   });
   it('can expose getContainer', () => {
     facade.getContainer();
-    expect(mapMock.getContainer.calledOnce);
+    expect(mapMock.getContainer.calledOnce).to.equal(true);
   });
   it('can expose getCanvasContainer', () => {
     facade.getCanvasContainer();
-    expect(mapMock.getCanvasContainer.calledOnce);
+    expect(mapMock.getCanvasContainer.calledOnce).to.equal(true);
   });
   it('can expose getCanvas', () => {
     facade.getCanvas();
-    expect(mapMock.getCanvas.calledOnce);
+    expect(mapMock.getCanvas.calledOnce).to.equal(true);
   });
   it('can expose loaded', () => {
     facade.loaded();
-    expect(mapMock.loaded.calledOnce);
+    expect(mapMock.loaded.calledOnce).to.equal(true);
   });
   it('can expose getCenter', () => {
     facade.getCenter();
-    expect(mapMock.getCenter.calledOnce);
+    expect(mapMock.getCenter.calledOnce).to.equal(true);
   });
   it('can expose getZoom', () => {
     facade.getZoom();
-    expect(mapMock.getZoom.calledOnce);
+    expect(mapMock.getZoom.calledOnce).to.equal(true);
   });
   it('can expose getBearing', () => {
     facade.getBearing();
-    expect(mapMock.getBearing.calledOnce);
+    expect(mapMock.getBearing.calledOnce).to.equal(true);
   });
   it('can expose getPitch', () => {
     facade.getPitch();
-    expect(mapMock.getPitch.calledOnce);
+    expect(mapMock.getPitch.calledOnce).to.equal(true);
   });
 });

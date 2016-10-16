@@ -53,14 +53,14 @@ describe('Styles util', () => {
       it('will replace the map style when they are simple style references', () => {
         const map = getMapStylesMock();
         update(map, 'abc', 'def');
-        expect(map.setStyle.calledOnce);
+        expect(map.setStyle.calledOnce).to.equal(true);
       });
 
       it('will update the map style with differences', () => {
         const map = getMapStylesMock();
         update(map, styleA, styleB);
-        expect(map.addSource.calledOnce);
-        expect(map.addLayer.calledOnce);
+        expect(map.addSource.calledOnce).to.equal(true);
+        expect(map.addLayer.calledOnce).to.equal(true);
       });
 
       it('will return on immutable object comparisons', () => {

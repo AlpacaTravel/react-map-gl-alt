@@ -12,7 +12,7 @@ export const updateOptions = (map, current, next) => {
     map.setClasses(next.mapClasses);
   }
   if (diff('maxBounds', current, next)) {
-    map.setMaxBounds(next.mapClasses);
+    map.setMaxBounds(next.maxBounds);
   }
   if (diff('scrollZoomDisabled', current, next)) {
     if (next.scrollZoomDisabled === true) {
