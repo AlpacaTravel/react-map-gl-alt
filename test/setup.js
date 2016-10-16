@@ -1,6 +1,6 @@
 import jsdom from 'jsdom';
 
-global.document = jsdom.jsdom('', { url: 'http://localhost/' });
+global.document = jsdom.jsdom('<html><body></body></html>', { url: 'http://localhost/' });
 global.window = document.defaultView;
 Object.keys(document.defaultView).forEach(property => {
   if (typeof global[property] === 'undefined') {

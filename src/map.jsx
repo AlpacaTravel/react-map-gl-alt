@@ -153,12 +153,23 @@ class Map extends React.Component {
     this.onChangeViewport({
       longitude: mod(longitude + 180, 360) - 180,
       latitude,
+      center: e.target.getCenter(),
       zoom: e.target.getZoom(),
       pitch: e.target.getPitch(),
       bearing: mod(e.target.getBearing() + 180, 360) - 180,
       isDragging: this.state.isDragging,
+      isTouching: this.state.isTouching,
+      isZooming: this.state.isZooming,
+      isMoving: this.state.isMoving,
+      startDragLngLat: this.state.startDragLngLat,
+      startTouchLngLat: this.state.startTouchLngLat,
+      startZoomLngLat: this.state.startZoomLngLat,
+      startMoveLngLat: this.state.startMoveLngLat,
+      startRotatingLngLat: this.state.startRotatingLngLat,
       startPitch: this.state.startPitch,
       startBearing: this.state.startBearing,
+      startZoom: this.state.startZoom,
+      userControlled: this.state.userControlled,
     });
   }
 
