@@ -17,11 +17,12 @@ based vector tile mapping library.
 * Expose project/unproject to use mapbox-gl-js mercator opposed to separate instance (Done)
 * Use Immutable and mapbox-gl-js-style-spec for diffStyles (Done)
 * Use setData for geojson sources (Done)
-* API similar to current react-map-gl MapGL object props (Done)
+* API support for current react-map-gl MapGL wrapper props (Done)
 * Support for all current Uber overlays (In Progress)
 * Support for width/height 100% etc (In Progress)
 * Provide a separation for managing viewport interactions (Done)
 * Provide an example controlled viewport interaction component (To Do)
+* High Code Coverage (In Progress)
 
 ## Overview
 
@@ -174,12 +175,29 @@ return (
 ```
 
 ## Differences to react-map-gl
-This project interfaces similar to the react-map-gl component, but aims to build
-a working relationship with mapbox-gl-js in terms of controlled interaction
-and internal state.
 
-This leads to more fluid transitions and support for all mapbox user
-interactions.
+This project interfaces similar to the react-map-gl component, but aims to
+provide some flexibilities with interactions. See the objectives of this project
+which articulate some of the major differences with this implementation to
+react-map-gl.
+
+There have been some motivations for us to warrant this extended spec. We need
+more exposure to the supported features of mapbox-gl-js, as well as want to
+leverage their optimised user interactions for smoother map behaviour.
+
+* Support for all interactions of mapbox-gl-js
+* Support for all handlers (BoxZoom, ScrollZoom, DoubleClickZoom, Keyboard etc)
+* Support the lastest mapbox-gl-js releases
+* More flexible control of animation
+* Improved mapbox API exposure with more of the API available for developers (stateless)
+* Support for all mapbox events
+* Easy access to queryRenderedFeatures etc.
+
+This project also supports the existing proptypes and convenience functions
+as react-map-gl so that developers can use their existing code and migrate
+across easily.
+
+Your visualisations and overlays will still be compatible also.
 
 ### Support using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
 
@@ -215,6 +233,9 @@ import Map from 'react-map-gl-alt';
   // Add additional overlays etc here...
 </Map>
 ```
+
+Please note; This project does not currently package the overlays included with
+the react-map-gl project.
 
 ### Extended onChangeViewport
 
