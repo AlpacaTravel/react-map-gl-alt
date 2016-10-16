@@ -2,6 +2,20 @@ import { describe } from 'mocha';
 import { expect } from 'chai';
 import { getInteractiveLayerIds, update } from '../../../src/utils/styles';
 import Immutable from 'immutable';
+import { styleSat as styleA, styleSatCountryLabels as styleB } from '../../example-styles';
+import sinon from 'sinon';
+
+const getMapStylesMock = () => ({
+  setStyle: sinon.spy(),
+  addLayer: sinon.spy(),
+  removeLayer: sinon.spy(),
+  addSource: sinon.spy(),
+  removeSource: sinon.spy(),
+  setFilter: sinon.spy(),
+  setLayerZoomRange: sinon.spy(),
+  setPaintProperty: sinon.spy(),
+  setLayoutProperty: sinon.spy(),
+});
 
 describe('Styles util', () => {
   describe('getInteractiveLayerIds() function', () => {
@@ -36,8 +50,26 @@ describe('Styles util', () => {
   });
   describe('update() function', () => {
     describe('while working with style differences', () => {
+      it('will replace the map style when they are simple style references', () => {
+        const map = getMapStylesMock();
+        update(map, 'abc', 'def');
+        expect(map.setStyle.calledOnce);
+      });
+
+      it('will update the map style with differences', () => {
+        const map = getMapStylesMock();
+        update(map, styleA, styleB);
+        expect(map.addSource.calledOnce);
+        expect(map.addLayer.calledOnce);
+      });
+
+      it('will return on immutable object comparisons', () => {
+        const map = getMapStylesMock();
+        const style = Immutable.fromJS(styleA);
+        update(map, style, style);
+      });
+
       it('will update the geoJSON data using setData');
-      it('will update the map style with differences');
     });
   });
 });
