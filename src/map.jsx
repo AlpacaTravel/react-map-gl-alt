@@ -38,13 +38,6 @@ class Map extends React.Component {
       height: props.containerHeight,
     };
 
-    // TODO: Disable updates with limited support? Fails tests..
-    // if (!this.state.isSupported) {
-    //   this.componentDidMount = noop;
-    //   this.componentWillReceiveProps = noop;
-    //   this.componentDidUpdate = noop;
-    // }
-
     const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
     if (accessToken) {
       mapboxgl.accessToken = accessToken;
@@ -79,7 +72,7 @@ class Map extends React.Component {
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       trackResize: !this.props.trackResizeDisabled,
       center: this.props.center,
-      // zoom: this.props.center,
+      zoom: this.props.zoom,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
     };
