@@ -56,9 +56,9 @@ describe('Map Facade', () => {
     expect(mapMock.project.withArgs('param').calledOnce);
   });
   it('can expose unproject', () => {
-    mapMock.project.withArgs('param');
-    facade.project('param');
-    expect(mapMock.project.withArgs('param').calledOnce);
+    mapMock.unproject.withArgs('param');
+    facade.unproject('param');
+    expect(mapMock.unproject.withArgs('param').calledOnce);
   });
   it('can expose queryRenderedFeatures', () => {
     mapMock.queryRenderedFeatures.withArgs('param', 'param');
