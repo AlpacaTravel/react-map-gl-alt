@@ -21,8 +21,15 @@ describe('Transform Facade', () => {
     pointCoordinate: sinon.spy(),
     coordinatePoint: sinon.spy(),
     calculatePosMatrix: sinon.spy(),
+    minZoom: 0,
   };
+  // sinon.spy(transformMock, 'minZoom', () => {});
   const wrapper = new TransformFacade(transformMock);
+  // it.only('can expose minZoom', () => {
+  //   /* eslint no-unused-expressions: 0 */
+  //   wrapper.minZoom;
+  //   expect(transformMock.minZoom.calledOnce).to.equal(true);
+  // });
   it('can expose coveringZoomLevel', () => {
     transformMock.coveringZoomLevel.withArgs('param');
     wrapper.coveringZoomLevel('param');
