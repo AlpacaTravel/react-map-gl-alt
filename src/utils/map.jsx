@@ -66,7 +66,7 @@ export const updateOptions = (map, current, next) => {
 };
 
 export const cloneTransform = (transform) => {
-  const clonedTransform = Object.create(Object.getPrototypeOf(transform.prototype));
+  const clonedTransform = Object.create(Object.getPrototypeOf(transform));
   clonedTransform.tileSize = transform.tileSize; // Constant
   clonedTransform.minZoom = transform.minZoom;
   clonedTransform.maxZoom = transform.maxZoom;

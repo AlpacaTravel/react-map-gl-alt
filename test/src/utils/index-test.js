@@ -1,6 +1,6 @@
 import { describe } from 'mocha';
 import { expect } from 'chai';
-import { diff } from '../../../src/utils';
+import { diff, has, mod } from '../../../src/utils';
 
 describe('Utils', () => {
   describe('diff() function', () => {
@@ -29,10 +29,17 @@ describe('Utils', () => {
     });
   });
   describe('has() function', () => {
-    it('will respond true when an object has a property');
-    it('will response false when an object does not have a property');
+    it('will respond true when an object has a property', () => {
+      expect(has({ a: 'val' }, 'a'));
+    });
+    it('will response false when an object does not have a property', () => {
+      expect(has({ a: 'val' }, 'b')).to.equal(false);
+    });
   });
   describe('mod() function', () => {
-    it('will correctly mod supplied coordinates');
+    it('will correctly mod supplied coordinates', () => {
+      expect(mod(190 + 180, 360) - 180).to.equal(-170);
+      expect(mod(-190 + 180, 360) - 180).to.equal(170);
+    });
   });
 });
