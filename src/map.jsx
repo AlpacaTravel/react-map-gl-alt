@@ -26,8 +26,9 @@ class Map extends React.Component {
       isMoving: false,
       startDragLngLat: null,
       startTouchLngLat: null,
-      startZoomLngLat: null,
+      startZoomLngLat: null, // same as startZoom?
       startMoveLngLat: null,
+      startRotatingLngLat: null, // same as startBearing?
       startBearing: null,
       startPitch: null,
       startZoom: null,
@@ -203,6 +204,12 @@ class Map extends React.Component {
     });
     this._map.on('touchend', () => {
       this.state({ isTouching: false, startTouchLngLat: null });
+    });
+    this._map.on('rotatestart', (event) => {
+      this.state({ isRotating: true, startRotatingLngLat: event.lngLat });
+    });
+    this._map.on('rotateend', () => {
+      this.state({ isRotating: false, startRotatingLngLat: null });
     });
   }
 

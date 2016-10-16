@@ -2,6 +2,8 @@ import { describe } from 'mocha';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import MapFacade from '../../../src/facades/map';
+import TransformFacade from '../../../src/facades/transform';
+import { TestTransform } from '../utils/map-test';
 
 describe('Map Facade', () => {
   const mapMock = {
@@ -21,77 +23,84 @@ describe('Map Facade', () => {
     getZoom: sinon.spy(),
     getBearing: sinon.spy(),
     getPitch: sinon.spy(),
+    transform: new TestTransform(),
   };
-  const exposeper = new MapFacade(mapMock);
+  const facade = new MapFacade(mapMock);
   it('will establish event listeners', () => {
     expect(mapMock.on.callCount).to.be.above(0);
   });
-  it('can expose transform facade object');
-  it('can cloneTransform');
+  it('can expose transform facade object', () => {
+    expect(facade.transform).to.be.an.instanceof(TransformFacade);
+  });
+  it('can cloneTransform', () => {
+    const clone = facade.cloneTransform();
+    expect(clone).to.be.an.instanceof(TestTransform);
+    expect(clone).to.not.equal(mapMock.transform);
+  });
   it('can expose hasClass', () => {
     mapMock.hasClass.withArgs('param');
-    exposeper.hasClass('param');
+    facade.hasClass('param');
     expect(mapMock.hasClass.withArgs('param').calledOnce);
   });
   it('can expose getClasses', () => {
-    exposeper.getClasses();
+    facade.getClasses();
     expect(mapMock.getClasses.calledOnce);
   });
   it('can expose getBounds', () => {
-    exposeper.getBounds();
+    facade.getBounds();
     expect(mapMock.getBounds.calledOnce);
   });
   it('can expose project', () => {
     mapMock.project.withArgs('param');
-    exposeper.project('param');
+    facade.project('param');
     expect(mapMock.project.withArgs('param').calledOnce);
   });
   it('can expose unproject', () => {
     mapMock.project.withArgs('param');
-    exposeper.project('param');
+    facade.project('param');
     expect(mapMock.project.withArgs('param').calledOnce);
   });
   it('can expose queryRenderedFeatures', () => {
     mapMock.queryRenderedFeatures.withArgs('param', 'param');
-    exposeper.queryRenderedFeatures('param', 'param');
+    facade.queryRenderedFeatures('param', 'param');
     expect(mapMock.queryRenderedFeatures.withArgs('param', 'param').calledOnce);
   });
   it('can expose querySourceFeatures', () => {
     mapMock.querySourceFeatures.withArgs('param', 'param');
-    exposeper.querySourceFeatures('param', 'param');
+    facade.querySourceFeatures('param', 'param');
 
     expect(mapMock.querySourceFeatures.withArgs('param', 'param').calledOnce);
   });
   it('can expose getContainer', () => {
-    exposeper.getContainer();
+    facade.getContainer();
     expect(mapMock.getContainer.calledOnce);
   });
   it('can expose getCanvasContainer', () => {
-    exposeper.getCanvasContainer();
+    facade.getCanvasContainer();
     expect(mapMock.getCanvasContainer.calledOnce);
   });
   it('can expose getCanvas', () => {
-    exposeper.getCanvas();
+    facade.getCanvas();
     expect(mapMock.getCanvas.calledOnce);
   });
   it('can expose loaded', () => {
-    exposeper.loaded();
+    facade.loaded();
     expect(mapMock.loaded.calledOnce);
   });
   it('can expose getCenter', () => {
-    exposeper.getCenter();
+    facade.getCenter();
     expect(mapMock.getCenter.calledOnce);
   });
   it('can expose getZoom', () => {
-    exposeper.getZoom();
+    facade.getZoom();
     expect(mapMock.getZoom.calledOnce);
   });
   it('can expose getBearing', () => {
-    exposeper.getBearing();
+    facade.getBearing();
     expect(mapMock.getBearing.calledOnce);
   });
   it('can expose getPitch', () => {
-    exposeper.getPitch();
+    facade.getPitch();
     expect(mapMock.getPitch.calledOnce);
   });
 });

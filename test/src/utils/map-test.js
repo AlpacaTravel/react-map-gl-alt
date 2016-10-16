@@ -1,9 +1,9 @@
-import { describe, it, beforeEach } from 'mocha';
+import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { cloneTransform, updateOptions } from '../../../src/utils/map';
 
-class DummyTransform {
+export class TestTransform {
   constructor() {
     this.tileSize = '512';
     this.minZoom = 0;
@@ -192,7 +192,7 @@ describe('Map Utils', () => {
     });
   });
   describe('cloneTransform() function', () => {
-    const original = new DummyTransform();
+    const original = new TestTransform();
     const clone = cloneTransform(original);
     it('will correctly clone a separate object', () => {
       /* eslint no-unused-expressions: 0 */

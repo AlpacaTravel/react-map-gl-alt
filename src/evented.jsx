@@ -44,7 +44,7 @@ export default class Evented {
 
   notifyListeners(type, args) {
     const listeners = this._listeners[type] || [];
-    if (this._listeners.length) {
+    if (listeners.length) {
       switch (type) {
         case 'resize':
         case 'remove':
@@ -56,12 +56,6 @@ export default class Evented {
           break;
         // Safe errors
         case 'error':
-        case 'movestart':
-        case 'moveend':
-        case 'boxzoomend':
-        case 'boxzoomstart':
-        case 'dragstart':
-        case 'dragend':
           listeners.forEach((listener) => {
             listener(...args);
           });
@@ -87,7 +81,7 @@ export default class Evented {
         case 'click':
         case 'dblclick':
         case 'contextmenu':
-          this.notifyMapMouseListeners(listeners, args);
+          this.notifyMapEventListeners(listeners, args);
           break;
         // MapTouchEvents
         case 'touchstart':
@@ -96,6 +90,12 @@ export default class Evented {
           this.notifyMapEventListeners(listeners, args);
           break;
         // MapMouseEvents|MouseTouchEvents
+        case 'movestart':
+        case 'moveend':
+        case 'boxzoomend':
+        case 'boxzoomstart':
+        case 'dragstart':
+        case 'dragend':
         case 'move':
         case 'zoomstart':
         case 'zoomend':
@@ -114,10 +114,10 @@ export default class Evented {
   }
 
   notifyMapEventListeners(listeners, args) {
-    const mapMouseEventClone = _.cloneDeep(args[0]);
-    mapMouseEventClone.target = this._mapAccessor; // Accessor map only!
+    const mapEventClone = _.cloneDeep(args[0]);
+    mapEventClone.target = this._mapAccessor; // Accessor map only!
     listeners.forEach((listener) => {
-      listener(mapMouseEventClone);
+      listener(mapEventClone);
     });
   }
 
