@@ -8,6 +8,14 @@ export default class Map {
     this._evented = new Evented(map, this);
     this.transform = new Transform(map.transform);
   }
+  on(type, action) {
+    this._evented.on(type, action);
+    return this;
+  }
+  off(type, action) {
+    this._evented.off(type, action);
+    return this;
+  }
   hasClass(klass) {
     return this._map.hasClass(klass);
   }

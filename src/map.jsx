@@ -25,6 +25,7 @@ class Map extends React.Component {
       isZooming: false,
       isMoving: false,
       isLoaded: false,
+      isStyleLoaded: false,
       startDragLngLat: null,
       startTouchLngLat: null,
       startZoomLngLat: null, // same as startZoom?
@@ -43,6 +44,7 @@ class Map extends React.Component {
       mapboxgl.accessToken = accessToken;
     }
 
+    this._simpleQuery = this._simpleQuery.bind(this);
     this._simpleClick = this._simpleClick.bind(this);
     this._simpleHover = this._simpleHover.bind(this);
     this._onChangeViewport = this._onChangeViewport.bind(this);
@@ -58,8 +60,14 @@ class Map extends React.Component {
   componentDidMount() {
     // Create the local map
     const mapStyle = Immutable.Map.isMap(this.props.mapStyle) ?
-      this.props.mapStyle.toJs() :
+      this.props.mapStyle.toJS() :
       this.props.mapStyle;
+
+    // Optionally use longitude/latitude without a center present
+    let center = this.props.center;
+    if (this.props.longitude && this.props.latitude && !this.props.center) {
+      center = [this.props.longitude, this.props.latitude];
+    }
 
     const options = {
       container: this.refs.container,
@@ -71,7 +79,7 @@ class Map extends React.Component {
       failIfMajorPerformanceCaveat: !this.props.failIfMajorPerformanceCaveatDisabled,
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       trackResize: !this.props.trackResizeDisabled,
-      center: this.props.center,
+      center,
       zoom: this.props.zoom,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
@@ -83,7 +91,7 @@ class Map extends React.Component {
 
     // Initial actions
     this._updateConvenienceHandlers(this.props);
-    updateMapOptions(this._map, {}, this.props);
+    this._updateMapOptions({}, this.props);
 
     // Listen to some of the dispatched events
     this._listenStateEvents();
@@ -92,8 +100,8 @@ class Map extends React.Component {
   componentWillReceiveProps(nextProps) {
     this._updateMapViewport(nextProps);
     this._updateConvenienceHandlers(nextProps);
-    updateStyle(this._map, this.props.mapStyle, nextProps.mapStyle);
-    updateMapOptions(this._map, this.props, nextProps);
+    this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
+    this._updateMapOptions(this.props, nextProps);
   }
 
   componentWillUnmount() {
@@ -112,7 +120,7 @@ class Map extends React.Component {
     if (!callback) {
       return;
     }
-    const features = this._map.queryRenderedFeatures(
+    const features = this._mapFacade.queryRenderedFeatures(
       geometry,
       this._getQueryParams()
     );
@@ -140,7 +148,7 @@ class Map extends React.Component {
     if (!this.props.onHoverFeatures) {
       return;
     }
-    this._simpleQuery(e.point, this.props.onClickFeatures);
+    this._simpleQuery(e.point, this.props.onHoverFeatures);
   }
 
   _onChangeViewport(e) {
@@ -149,10 +157,10 @@ class Map extends React.Component {
       return;
     }
 
-    const [longitude, latitude] = e.target.getCenter();
-    this.onChangeViewport({
-      longitude: mod(longitude + 180, 360) - 180,
-      latitude,
+    const { lng, lat } = e.target.getCenter();
+    this.props.onChangeViewport({
+      longitude: mod(lng + 180, 360) - 180,
+      latitude: lat,
       center: e.target.getCenter(),
       zoom: e.target.getZoom(),
       pitch: e.target.getPitch(),
@@ -222,6 +230,16 @@ class Map extends React.Component {
     });
   }
 
+  _updateStyle(previousStyle, nextStyle) {
+    if (this.state.isLoaded === true) {
+      updateStyle(this._map, previousStyle, nextStyle);
+    }
+  }
+
+  _updateMapOptions(previous, next) {
+    updateMapOptions(this._map, previous, next);
+  }
+
   _updateConvenienceHandlers(nextProps) {
     if (diff('onClickFeatures', this.props, nextProps)) {
       if (nextProps.onClickFeatures) {
@@ -232,16 +250,16 @@ class Map extends React.Component {
     }
     if (diff('onHoverFeatures', this.props, nextProps)) {
       if (nextProps.onHoverFeatures) {
-        this._map.on('move', this._simpleHover);
+        this._map.on('mousemove', this._simpleHover);
       } else {
-        this._map.off('move', this._simpleHover);
+        this._map.off('mousemove', this._simpleHover);
       }
     }
     if (diff('onChangeViewport', this.props, nextProps)) {
-      if (nextProps.onHoverFeatures) {
-        this._map.on('move', this._hover);
+      if (nextProps.onChangeViewport) {
+        this._map.on('move', this._onChangeViewport);
       } else {
-        this._map.off('move', this._hover);
+        this._map.off('move', this._onChangeViewport);
       }
     }
   }
@@ -252,8 +270,18 @@ class Map extends React.Component {
       return;
     }
 
+    // Optionally use lng/lat over center
+    let nextPropsCenter = nextProps.center;
+    if (nextProps.longitude && nextProps.latitude && !nextProps.center) {
+      nextPropsCenter = [nextProps.longitude, nextProps.latitude];
+    }
+    let propsCenter = this.props.center;
+    if (this.props.longitude && this.props.latitude && !this.props.center) {
+      propsCenter = [nextProps.longitude, nextProps.latitude];
+    }
+
     const viewportChanged = (
-      diff('center', this.props, nextProps) ||
+      diff('center', { center: propsCenter }, { center: nextPropsCenter }) ||
       diff('zoom', this.props, nextProps) ||
       // diff('altitude', this.props, nextProps) ||
       diff('bearing', this.props, nextProps) ||
@@ -262,9 +290,9 @@ class Map extends React.Component {
 
     if (viewportChanged) {
       const target = {
-        center: nextProps.center,
-        longitude: nextProps.center[0],
-        latitude: nextProps.center[1],
+        center: nextPropsCenter,
+        longitude: nextPropsCenter[0],
+        latitude: nextPropsCenter[1],
         zoom: nextProps.zoom,
         // altitude: nextProps.altitude,
         bearing: nextProps.bearing,
@@ -274,35 +302,37 @@ class Map extends React.Component {
 
       // Use a move
       const result = nextProps.move(target);
-      switch (result.command) {
-        case 'flyTo':
-          this._map.flyTo(...result.args);
-          break;
-        case 'fitBounds':
-          this._map.fitBounds(...result.args);
-          break;
-        case 'jumpTo':
-          this._map.jumpTo(...result.args);
-          break;
-        case 'panTo':
-          this._map.panTo(...result.args);
-          break;
-        case 'zoomTo':
-          this._map.zoomTo(...result.args);
-          break;
-        case 'zoomIn':
-          this._map.zoomIn(...result.args);
-          break;
-        case 'rotateTo':
-          this._map.rotateTo(...result.args);
-          break;
-        case 'resetNorth':
-          this._map.rotateTo(...result.args);
-          break;
-        case 'snapToNorth':
-          this._map.snapToNorth(...result.args);
-          break;
-        default: break;
+      if (result.command && result.args) {
+        switch (result.command) {
+          case 'flyTo':
+            this._map.flyTo(...result.args);
+            break;
+          case 'fitBounds':
+            this._map.fitBounds(...result.args);
+            break;
+          case 'jumpTo':
+            this._map.jumpTo(...result.args);
+            break;
+          case 'panTo':
+            this._map.panTo(...result.args);
+            break;
+          case 'zoomTo':
+            this._map.zoomTo(...result.args);
+            break;
+          case 'zoomIn':
+            this._map.zoomIn(...result.args);
+            break;
+          case 'rotateTo':
+            this._map.rotateTo(...result.args);
+            break;
+          case 'resetNorth':
+            this._map.resetNorth(...result.args);
+            break;
+          case 'snapToNorth':
+            this._map.snapToNorth(...result.args);
+            break;
+          default: break;
+        }
       }
     }
   }
@@ -355,6 +385,8 @@ Map.propTypes = {
   ignoreEmptyFeatures: React.PropTypes.bool,
   onClickFeatures: React.PropTypes.func,
   clickRadius: React.PropTypes.number,
+  longitude: React.PropTypes.number,
+  latitude: React.PropTypes.number,
 
   // Target controls
   center: React.PropTypes.arrayOf(React.PropTypes.number),

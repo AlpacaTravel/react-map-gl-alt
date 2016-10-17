@@ -48,8 +48,6 @@ class MapEvents extends React.Component {
     this._updateListener('onClick', current, next);
     this._updateListener('onDblClick', current, next);
     this._updateListener('onContextMenu', current, next);
-    this._updateListener('onDblClick', current, next);
-    this._updateListener('onDblClick', current, next);
     this._updateListener('onMoveStart', current, next);
     this._updateListener('onMove', current, next);
     this._updateListener('onMoveEnd', current, next);

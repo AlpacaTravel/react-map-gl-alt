@@ -6,14 +6,40 @@ export const styleSat = {
     'mapbox:type': 'template',
   },
   sources: {
-    'mapbox://mapbox.satellite': {
-      url: 'mapbox://mapbox.satellite',
-      type: 'raster',
-      tileSize: 256,
+    route: {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [-122.48369693756104, 37.83381888486939],
+            [-122.48348236083984, 37.83317489144141],
+            [-122.48339653015138, 37.83270036637107],
+            [-122.48356819152832, 37.832056363179625],
+            [-122.48404026031496, 37.83114119107971],
+            [-122.48404026031496, 37.83049717427869],
+            [-122.48348236083984, 37.829920943955045],
+            [-122.48356819152832, 37.82954808664175],
+            [-122.48507022857666, 37.82944639795659],
+            [-122.48610019683838, 37.82880236636284],
+            [-122.48695850372314, 37.82931081282506],
+            [-122.48700141906738, 37.83080223556934],
+            [-122.48751640319824, 37.83168351665737],
+            [-122.48803138732912, 37.832158048267786],
+            [-122.48888969421387, 37.83297152392784],
+            [-122.48987674713133, 37.83263257682617],
+            [-122.49043464660643, 37.832937629287755],
+            [-122.49125003814696, 37.832429207817725],
+            [-122.49163627624512, 37.832564787218985],
+            [-122.49223709106445, 37.83337825839438],
+            [-122.49378204345702, 37.83368330777276],
+          ],
+        },
+      },
     },
   },
-  sprite: 'mapbox://sprites/alpacatravel/ciucfcew200322ho8so7u88qj',
-  glyphs: 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
   layers: [
     {
       id: 'background',
@@ -25,12 +51,17 @@ export const styleSat = {
       },
     },
     {
-      id: 'mapbox-mapbox-satellite',
-      type: 'raster',
-      source: 'mapbox://mapbox.satellite',
-      interactive: true,
-      layout: {},
-      paint: {},
+      id: 'route',
+      type: 'line',
+      source: 'route',
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': '#888',
+        'line-width': 8,
+      },
     },
   ],
   created: '2016-10-16T09:23:11.473Z',
@@ -47,18 +78,67 @@ export const styleSatCountryLabels = {
     'mapbox:type': 'template',
   },
   sources: {
-    composite: {
-      url: 'mapbox://mapbox.mapbox-streets-v7',
-      type: 'vector',
+    route: {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [-122.48369693756104, 37.83381888486939],
+            [-122.48348236083984, 37.83317489144141],
+            [-122.48339653015138, 37.83270036637107],
+            [-122.48356819152832, 37.832056363179625],
+            [-122.48404026031496, 37.83114119107971],
+            [-122.48404026031496, 37.83049717427869],
+            [-122.48348236083984, 37.829920943955045],
+            [-122.48356819152832, 37.82954808664175],
+            [-122.48507022857666, 37.82944639795659],
+            [-122.48610019683838, 37.82880236636284],
+            [-122.48695850372314, 37.82931081282506],
+            [-122.48700141906738, 37.83080223556934],
+            [-122.48751640319824, 37.83168351665737],
+            [-122.48803138732912, 37.832158048267786],
+            [-122.48888969421387, 37.83297152392784],
+            [-122.48987674713133, 37.83263257682617],
+            [-122.49043464660643, 37.832937629287755],
+            [-122.49125003814696, 37.832429207817725],
+            [-122.49163627624512, 37.832564787218985],
+            [-122.49223709106445, 37.83337825839438],
+            [-122.49378204345702, 37.83368330777276],
+          ],
+        },
+      },
     },
-    'mapbox://mapbox.satellite': {
-      url: 'mapbox://mapbox.satellite',
-      type: 'raster',
-      tileSize: 256,
+    points: {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [-77.03238901390978, 38.913188059745586],
+          },
+          properties: {
+            title: 'Mapbox DC',
+            icon: 'monument',
+          },
+        }, {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [-122.414, 37.776],
+          },
+          properties: {
+            title: 'Mapbox SF',
+            icon: 'harbor',
+          },
+        }],
+      },
     },
   },
-  sprite: 'mapbox://sprites/alpacatravel/ciucfcew200322ho8so7u88qj',
-  glyphs: 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
   layers: [
     {
       id: 'background',
@@ -70,55 +150,28 @@ export const styleSatCountryLabels = {
       },
     },
     {
-      id: 'mapbox-mapbox-satellite',
-      type: 'raster',
-      source: 'mapbox://mapbox.satellite',
-      interactive: true,
-      layout: {},
-      paint: {},
-    },
-    {
-      id: 'country-label-sm',
-      type: 'symbol',
-      metadata: {
-        'mapbox:group': 1459802941943.712,
-      },
-      source: 'composite',
-      'source-layer': 'country_label',
-      minzoom: 1,
-      maxzoom: 10,
-      interactive: true,
-      filter: [
-        '>=',
-        'scalerank',
-        5,
-      ],
+      id: 'route',
+      type: 'line',
+      source: 'route',
       layout: {
-        'text-field': '{name_en}',
-        'text-max-width': 6,
-        'text-font': [
-          'DIN Offc Pro Medium',
-          'Arial Unicode MS Regular',
-        ],
-        'text-size': {
-          base: 0.9,
-          stops: [
-            [5, 14],
-            [9, 22],
-          ],
-        },
+        'line-join': 'round',
+        'line-cap': 'round',
       },
       paint: {
-        'text-color': 'hsl(0, 0%, 100%)',
-        'text-halo-color': {
-          base: 1,
-          stops: [
-            ['0', 'hsl(224, 2%, 18%)'],
-            ['4', 'hsl(224, 1%, 12%)'],
-            ['8', 'hsl(224, 1%, 2%)'],
-          ],
-        },
-        'text-halo-width': 1.25,
+        'line-color': '#888',
+        'line-width': 8,
+      },
+    },
+    {
+      id: 'points',
+      type: 'symbol',
+      source: 'points',
+      layout: {
+        'icon-image': '{icon}-15',
+        'text-field': '{title}',
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
       },
     },
   ],

@@ -36,11 +36,11 @@ export const update = (map, currentMapStyle, nextMapStyle) => {
   }
 
   // If we are dealing with immutable elements
-  if (Immutable.Map.isMap(nextMapStyle)) {
-    before = currentMapStyle.toJs();
+  if (Immutable.Map.isMap(currentMapStyle)) {
+    before = currentMapStyle.toJS();
   }
   if (Immutable.Map.isMap(nextMapStyle)) {
-    after = nextMapStyle.toJs();
+    after = nextMapStyle.toJS();
   }
 
   // Compare
