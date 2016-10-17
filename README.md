@@ -19,15 +19,15 @@ based vector tile mapping library.
 * Use Immutable and mapbox-gl-js-style-spec for diffStyles (Done)
 * Use setData for geojson sources (Done)
 * API support for current react-map-gl MapGL wrapper props (Done)
-* Support for all current Uber overlays (In Progress)
-* Support for width/height 100% etc (In Progress)
+* Support for width/height 100%/100vh etc (Done)
 * Provide a separation for managing viewport interactions (Done)
-* Provide an example controlled viewport interaction component (To Do)
-* High Code Coverage (In Progress)
+* Support for all current Uber overlays (In Progress)
+* Provide an example controlled viewport interaction component (In Progress)
+* High Code Coverage (Done)
 
 ## Overview
 
-### Installation (experimental)
+### Installation
 
 ```
 npm install react-map-gl-alt --save
@@ -36,6 +36,16 @@ npm install react-map-gl-alt --save
 This package works with compatible mapbox-gl-js build approaches, including
 webpack. This library supports the current 'dist' method recommended by
 mapbox-gl-js as of 0.25.0.
+
+## Running the examples
+
+Clone the example to your local fs. The example shows a simple full screen
+interaction controlled by this component (built using webpack etc).
+
+```
+npm install
+npm start
+```
 
 ### Usage (showing map accessor interaction with map events)
 

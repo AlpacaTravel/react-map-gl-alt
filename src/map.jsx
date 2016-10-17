@@ -35,8 +35,6 @@ class Map extends React.Component {
       startPitch: null,
       startZoom: null,
       userControlled: false,
-      width: props.containerWidth,
-      height: props.containerHeight,
     };
 
     const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
@@ -90,7 +88,7 @@ class Map extends React.Component {
     this._mapFacade = new MapFacade(this._map);
 
     // Initial actions
-    this._updateConvenienceHandlers(this.props);
+    this._updateConvenienceHandlers({}, this.props);
     this._updateMapOptions({}, this.props);
 
     // Listen to some of the dispatched events
@@ -99,7 +97,7 @@ class Map extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this._updateMapViewport(nextProps);
-    this._updateConvenienceHandlers(nextProps);
+    this._updateConvenienceHandlers(this.props, nextProps);
     this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
     this._updateMapOptions(this.props, nextProps);
   }
@@ -240,22 +238,22 @@ class Map extends React.Component {
     updateMapOptions(this._map, previous, next);
   }
 
-  _updateConvenienceHandlers(nextProps) {
-    if (diff('onClickFeatures', this.props, nextProps)) {
+  _updateConvenienceHandlers(prevProps, nextProps) {
+    if (diff('onClickFeatures', prevProps, nextProps)) {
       if (nextProps.onClickFeatures) {
         this._map.on('click', this._simpleClick);
       } else {
         this._map.off('click', this._simpleClick);
       }
     }
-    if (diff('onHoverFeatures', this.props, nextProps)) {
+    if (diff('onHoverFeatures', prevProps, nextProps)) {
       if (nextProps.onHoverFeatures) {
         this._map.on('mousemove', this._simpleHover);
       } else {
         this._map.off('mousemove', this._simpleHover);
       }
     }
-    if (diff('onChangeViewport', this.props, nextProps)) {
+    if (diff('onChangeViewport', prevProps, nextProps)) {
       if (nextProps.onChangeViewport) {
         this._map.on('move', this._onChangeViewport);
       } else {
@@ -342,20 +340,16 @@ class Map extends React.Component {
       <div
         ref="container"
         className="map"
-        style={this.props.containerStyles}
+        style={this.props.style}
       >
-        {this.props.children}
+        {this._map && this.props.children}
       </div>
     );
   }
 }
 
 Map.propTypes = {
-  containerStyles: React.PropTypes.object,
-
-  // React dimensions
-  containerWidth: React.PropTypes.number,
-  containerHeight: React.PropTypes.number,
+  style: React.PropTypes.object,
 
   // Mapbox access token
   mapboxApiAccessToken: React.PropTypes.string,
@@ -409,10 +403,6 @@ Map.propTypes = {
 };
 
 Map.defaultProps = {
-  containerStyles: {},
-  containerWidth: 500,
-  containerHeight: 400,
-
   minZoom: 0,
   maxZoom: 20,
 

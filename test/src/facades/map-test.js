@@ -8,6 +8,7 @@ import { TestTransform } from '../utils/map-test';
 describe('Map Facade', () => {
   const mapMock = {
     on: sinon.spy(),
+    off: sinon.spy(),
     hasClass: sinon.spy(),
     getClasses: sinon.spy(),
     getBounds: sinon.spy(),
@@ -26,8 +27,18 @@ describe('Map Facade', () => {
     transform: new TestTransform(),
   };
   const facade = new MapFacade(mapMock);
+  sinon.spy(facade._evented, 'on');
+  sinon.spy(facade._evented, 'off');
   it('will establish event listeners', () => {
     expect(mapMock.on.callCount).to.be.above(0);
+  });
+  it('will call the evented "on" implementation for events', () => {
+    facade.on('param', () => {});
+    expect(facade._evented.on.calledOnce).to.equal(true);
+  });
+  it('will call the evented "off" implementation for events', () => {
+    facade.off('param', () => {});
+    expect(facade._evented.off.calledOnce).to.equal(true);
   });
   it('can expose transform facade object', () => {
     expect(facade.transform).to.be.an.instanceof(TransformFacade);

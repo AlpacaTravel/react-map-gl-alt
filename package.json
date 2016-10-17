@@ -7,6 +7,7 @@
     "src"
   ],
   "scripts": {
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config example/webpack.config.js --host 0.0.0.0 --port 8080 --open",
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",
     "test": "npm run lint && node ./node_modules/nyc/bin/nyc.js npm run test:mocha && node ./node_modules/nyc/bin/nyc.js report --reporter=text-lcov | node ./node_modules/coveralls/bin/coveralls.js",
     "test:mocha": "mocha --compilers js:babel-core/register --require ./test/setup.js --recursive --timeout=6000 ./test",
@@ -51,6 +52,7 @@
     "gl": "^4.0.2",
     "istanbul": "^0.4.5",
     "jsdom": "^9.6.0",
+    "json-loader": "^0.5.4",
     "json2mq": "^0.2.0",
     "mocha": "^2.5.3",
     "mocha-lcov-reporter": "^1.2.0",
