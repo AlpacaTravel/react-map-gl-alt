@@ -8,6 +8,9 @@ describe('Utils', () => {
       expect(diff('foo', { foo: true }, { foo: true })).to.equal(false);
       expect(diff('foo', { foo: false }, { foo: true })).to.equal(true);
     });
+    it('will correctly diff zero values', () => {
+      expect(diff('foo', { foo: 0 }, { foo: 0 })).to.equal(false);
+    });
     it('will correctly diff empty values', () => {
       expect(diff('foo', {}, { foo: true })).to.equal(true);
       expect(diff('foo', null, { foo: true })).to.equal(true);

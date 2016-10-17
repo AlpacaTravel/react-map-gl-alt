@@ -5,6 +5,27 @@ import MapEvents from '../../src/map-events';
 
 const mapboxApiAccessToken = process.env.MAPBOX_API_ACCESS_TOKEN;
 
+const flyTo = (target) => {
+  console.log('flyTo animation');
+  return ({
+    command: 'flyTo',
+    args: [{
+      ...target,
+      // Use animation options, duration etc.
+      duration: 1000,
+      curve: 1.8,
+    }],
+  });
+};
+
+const resetNorth = (target) => ({
+  command: 'resetNorth',
+  args: [{
+    ...target,
+    duration: 200,
+  }],
+});
+
 class Example extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -17,70 +38,49 @@ class Example extends React.Component {
         ],
         zoom: 5,
       },
+      motion: flyTo,
     };
+
+    this._onClick = this._onClick.bind(this);
+    this._onChangeViewport = this._onChangeViewport.bind(this);
+  }
+
+  _onChangeViewport(viewport) {
+    this.setState({ viewport });
+  }
+
+  _onClick(e) {
+    // Access features under cursor through safe non-mutable map facade
+    const features = e.target.queryRenderedFeatures(e.point);
+    console.log(features);
   }
 
   render() {
-    const click = (e) => {
-      // Access features under cursor through safe non-mutable map facade
-      const features = e.target.queryRenderedFeatures(e.point);
-      console.log(features);
-    };
-
-    const onChangeViewport = () => {
-      // ...
-    };
-
-    const move = (target) => ({
-      command: 'flyTo',
-      args: [{
-        ...target,
-        // Use animation options, duration etc.
-        speed: 1.5,
-        curve: 1.8,
-      }],
-    });
-
-    const takeMeToHome = () => {
-      this.setState(
-        {
-          target: {
-            zoom: 10,
-            center: [144.9633200, -37.8140000],
-          },
-        }
-      );
-    };
-
     // Can update center/zoom etc to move
     return (
       <div
-        style={{
-          display: 'flex',
-          minHeight: '100vh',
-          flexDirection: 'column',
-        }}
+        style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
       >
         <div>
-          <button onClick={takeMeToHome}>
-            Melbourne
+          <button onClick={() => this.setState({ target: { zoom: 10, center: [144.9633200, -37.8140000] }, motion: flyTo })}>
+            Goto Melbourne
+          </button>
+          <button onClick={() => this.setState({ target: { ...this.state.viewport, bearing: 0, pitch: 0 }, motion: resetNorth })}>
+            Reset North
           </button>
         </div>
         <MapGL
           mapboxApiAccessToken={mapboxApiAccessToken}
           mapStyle="mapbox://styles/mapbox/streets-v9"
           {...this.state.target}
-          onChangeViewport={onChangeViewport}
-          style={{
-            display: 'flex',
-            flex: 1,
-          }}
-          move={move}
+          onChangeViewport={this._onChangeViewport}
+          style={{ display: 'flex', flex: 1 }}
+          move={this.state.motion}
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}
             onError={console.error}
-            onClick={click}
+            onClick={this._onClick}
           />
         </MapGL>
       </div>

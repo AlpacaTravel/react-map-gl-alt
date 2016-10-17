@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
 
 import MapFacade from './facades/map';
-import { diff, has, mod } from './utils';
+import { diff, has, mod, lngLatArray } from './utils';
 import { updateOptions as updateMapOptions } from './utils/map';
 import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
@@ -62,11 +62,6 @@ class Map extends React.Component {
       this.props.mapStyle;
 
     // Optionally use longitude/latitude without a center present
-    let center = this.props.center;
-    if (this.props.longitude && this.props.latitude && !this.props.center) {
-      center = [this.props.longitude, this.props.latitude];
-    }
-
     const options = {
       container: this.refs.container,
       style: mapStyle,
@@ -77,7 +72,7 @@ class Map extends React.Component {
       failIfMajorPerformanceCaveat: !this.props.failIfMajorPerformanceCaveatDisabled,
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       trackResize: !this.props.trackResizeDisabled,
-      center,
+      center: lngLatArray(this.props),
       zoom: this.props.zoom,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
@@ -268,18 +263,16 @@ class Map extends React.Component {
       return;
     }
 
-    // Optionally use lng/lat over center
-    let nextPropsCenter = nextProps.center;
-    if (nextProps.longitude && nextProps.latitude && !nextProps.center) {
-      nextPropsCenter = [nextProps.longitude, nextProps.latitude];
-    }
-    let propsCenter = this.props.center;
-    if (this.props.longitude && this.props.latitude && !this.props.center) {
-      propsCenter = [nextProps.longitude, nextProps.latitude];
-    }
+    // Obtain the center
+    const propsCenter = lngLatArray(this.props);
+    const nextPropsCenter = lngLatArray(nextProps);
 
     const viewportChanged = (
-      diff('center', { center: propsCenter }, { center: nextPropsCenter }) ||
+      diff(
+        'center',
+        { center: propsCenter },
+        { center: nextPropsCenter }
+      ) ||
       diff('zoom', this.props, nextProps) ||
       // diff('altitude', this.props, nextProps) ||
       diff('bearing', this.props, nextProps) ||
@@ -383,7 +376,10 @@ Map.propTypes = {
   latitude: React.PropTypes.number,
 
   // Target controls
-  center: React.PropTypes.arrayOf(React.PropTypes.number),
+  center: React.PropTypes.oneOfType([
+    React.PropTypes.arrayOf(React.PropTypes.number),
+    React.PropTypes.instanceOf(mapboxgl.LngLat),
+  ]),
   zoom: React.PropTypes.number,
   // altitude: React.PropTypes.number,
   bearing: React.PropTypes.number,

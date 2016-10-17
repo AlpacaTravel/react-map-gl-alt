@@ -167,21 +167,34 @@ describe('Map component', () => {
     });
   });
   describe('when updating viewport', () => {
-    const component = getMountedComponent(simpleDefaultProps);
-    const nextProps = {
-      ...simpleDefaultProps,
-      center: null,
-      longitude: 12,
-      latitude: 13,
-      move: (target) => ({
-        command: 'jumpTo',
-        args: [target],
-      }),
-    };
-    sinon.spy(nextProps, 'move');
-    component.setProps(nextProps);
     it('will use the provided move action', () => {
+      const component = getMountedComponent(simpleDefaultProps);
+      const nextProps = {
+        ...simpleDefaultProps,
+        center: null,
+        longitude: 12,
+        latitude: 13,
+        move: (target) => ({
+          command: 'jumpTo',
+          args: [target],
+        }),
+      };
+      sinon.spy(nextProps, 'move');
+      component.setProps(nextProps);
       expect(nextProps.move.calledOnce).to.equal(true);
+    });
+    it('will not trigger an update if the viewport has not updated', () => {
+      const component = getMountedComponent(simpleDefaultProps);
+      const nextProps = {
+        ...simpleDefaultProps,
+        move: (target) => ({
+          command: 'jumpTo',
+          args: [target],
+        }),
+      };
+      sinon.spy(nextProps, 'move');
+      component.setProps(nextProps);
+      expect(nextProps.move.calledOnce).to.equal(false);
     });
     it('will not update the viewport while the user is in control');
   });
@@ -193,6 +206,7 @@ describe('Map component', () => {
           sinon.spy(component.node._map, method);
           component.setProps({
             ...simpleDefaultProps,
+            center: null,
             longitude: 50,
             latitude: 50,
             move: (target) => ({
@@ -208,6 +222,7 @@ describe('Map component', () => {
       sinon.spy(component.node._map, 'fitBounds');
       component.setProps({
         ...simpleDefaultProps,
+        center: null,
         longitude: 50,
         latitude: 50,
         move: () => ({
@@ -228,6 +243,7 @@ describe('Map component', () => {
       sinon.spy(component.node._map, 'panTo');
       component.setProps({
         ...simpleDefaultProps,
+        center: null,
         longitude: 50,
         latitude: 50,
         move: () => ({
