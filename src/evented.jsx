@@ -118,7 +118,7 @@ export default class Evented {
   }
 
   notifyMapEventListeners(listeners, args) {
-    const mapEventClone = _.cloneDeep(args[0]);
+    const mapEventClone = args[0];
     mapEventClone.target = this._mapAccessor; // Accessor map only!
     listeners.forEach((listener) => {
       listener(mapEventClone);

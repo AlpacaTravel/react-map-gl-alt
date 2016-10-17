@@ -141,7 +141,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -165,7 +165,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -189,7 +189,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -213,7 +213,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -237,7 +237,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -261,7 +261,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -351,7 +351,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -375,7 +375,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -399,7 +399,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -423,7 +423,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -447,7 +447,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -471,7 +471,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -495,7 +495,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -519,7 +519,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -543,7 +543,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -567,7 +567,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -591,7 +591,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -615,7 +615,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -639,7 +639,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -663,7 +663,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -687,7 +687,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -711,7 +711,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -735,7 +735,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -759,7 +759,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
@@ -783,7 +783,7 @@ describe('Evented', () => {
       expect(listener.firstCall.args).to.exist;
       const received = listener.firstCall.args[0];
       expect(received).to.exist;
-      expect(received).to.not.equal(event); // Should clone
+      // Check for scrubbing access to the map
       expect(received.target).to.exist;
       expect(received.target).to.equal(mapAccessor);
       done();
