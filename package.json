@@ -1,14 +1,19 @@
 {
   "name": "react-map-gl-alt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A React wrapper for Mapbox-GL-JS",
-  "main": "src/index.js",
+  "main": "index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config example/webpack.config.js --host 0.0.0.0 --port 8080 --open",
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",
     "test": "npm run lint && node ./node_modules/nyc/bin/nyc.js --check-coverage --lines 90 npm run test:mocha && node ./node_modules/nyc/bin/nyc.js report --reporter=text-lcov | node ./node_modules/coveralls/bin/coveralls.js",
     "test:mocha": "mocha --compilers js:babel-core/register --require ./test/setup.js --recursive --timeout=6000 ./test",
-    "test:coverage": "node ./node_modules/nyc/bin/nyc.js npm run test:mocha"
+    "test:coverage": "node ./node_modules/nyc/bin/nyc.js npm run test:mocha",
+    "compile": "babel -d dist/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
