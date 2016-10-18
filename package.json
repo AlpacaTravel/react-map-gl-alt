@@ -2,10 +2,7 @@
   "name": "react-map-gl-alt",
   "version": "0.1.1",
   "description": "A React wrapper for Mapbox-GL-JS",
-  "main": "index.js",
-  "files": [
-    "src"
-  ],
+  "main": "src/index.js",
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config example/webpack.config.js --host 0.0.0.0 --port 8080 --open",
     "lint": "node ./node_modules/eslint/bin/eslint.js src/**/*",

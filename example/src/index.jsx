@@ -6,7 +6,6 @@ import MapEvents from '../../src/map-events';
 const mapboxApiAccessToken = process.env.MAPBOX_API_ACCESS_TOKEN;
 
 const flyTo = (target) => {
-  console.log('flyTo animation');
   return ({
     command: 'flyTo',
     args: [{
