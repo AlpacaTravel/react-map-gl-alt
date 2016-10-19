@@ -4,10 +4,11 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import Immutable from 'immutable';
+import * as _ from 'lodash';
 import Map from '../../src/map';
 import MapFacade from '../../src/facades/map';
 
-const getMountedComponent = (props) => (mount(<Map {...props} />));
+const factoryMountedComponent = (props) => (mount(<Map {...props} />));
 const simpleDefaultProps = {
   mapboxApiAccessToken: 'pk.eyJ1IjoiYWxwYWNhdHJhdmVsIiwiYSI6ImNpazY0aTB6czAwbGhoZ20ycHN2Ynhlc28ifQ.GwAeDuQVIUb4_U1mT-QUig',
   mapStyle: Immutable.fromJS({
@@ -22,7 +23,7 @@ const simpleDefaultProps = {
 
 describe('Map component', () => {
   describe('while mounting', () => {
-    const component = getMountedComponent(simpleDefaultProps);
+    const component = factoryMountedComponent(simpleDefaultProps);
     const map = component.node.getChildContext().map;
 
     it('will render', () => {
@@ -46,7 +47,7 @@ describe('Map component', () => {
     });
   });
   describe('while unmounting', () => {
-    const component = getMountedComponent(simpleDefaultProps);
+    const component = factoryMountedComponent(simpleDefaultProps);
     sinon.spy(component.node._map, 'remove');
     component.node.componentWillUnmount();
     it('will call map remove on unmount', () => {
@@ -54,7 +55,7 @@ describe('Map component', () => {
     });
   });
   describe('while receiving props', () => {
-    const component = getMountedComponent(simpleDefaultProps);
+    const component = factoryMountedComponent(simpleDefaultProps);
     sinon.spy(component.node, '_updateMapViewport');
     sinon.spy(component.node, '_updateMapOptions');
     sinon.spy(component.node, '_updateStyle');
@@ -106,7 +107,7 @@ describe('Map component', () => {
     });
   });
   describe('mounting without a center', () => {
-    const component = getMountedComponent({
+    const component = factoryMountedComponent({
       ...simpleDefaultProps,
       center: null,
       longitude: 12,
@@ -119,7 +120,7 @@ describe('Map component', () => {
     });
   });
   describe('mounting with a center', () => {
-    const component = getMountedComponent({
+    const component = factoryMountedComponent({
       ...simpleDefaultProps,
       longitude: 12,
       latitude: 13,
@@ -131,7 +132,7 @@ describe('Map component', () => {
     });
   });
   describe('updating without a center', () => {
-    const component = getMountedComponent(simpleDefaultProps);
+    const component = factoryMountedComponent(simpleDefaultProps);
     component.setProps({
       ...simpleDefaultProps,
       center: null,
@@ -150,7 +151,7 @@ describe('Map component', () => {
   });
   it('will move from a lat/lng prop value to another lat/lng prop value');
   describe('updating with a center', () => {
-    const component = getMountedComponent(simpleDefaultProps);
+    const component = factoryMountedComponent(simpleDefaultProps);
     component.setProps({
       ...simpleDefaultProps,
       longitude: 12,
@@ -166,9 +167,63 @@ describe('Map component', () => {
       expect(map.transform.center.lat).to.not.equal(13);
     });
   });
+  describe('mounting with a bounds and a custom move', () => {
+    const bounds = [[32.958984, -5.353521], [43.50585, 5.615985]];
+    const props = {
+      ...simpleDefaultProps,
+      center: [12, 13],
+      bounds,
+      move: (target) => ({
+        command: 'fitBounds',
+        args: [target.bounds, { animate: false }],
+      }),
+    };
+    sinon.spy(props, 'move');
+    const component = factoryMountedComponent(props);
+    const map = component.node.getChildContext().map;
+    it('will move to the bounds', () => {
+      expect(props.move.calledOnce).to.equal(true);
+      expect(map.transform.center.lng).to.be.within(bounds[0][0], bounds[1][0]);
+      expect(map.transform.center.lat).to.be.within(bounds[0][1], bounds[1][1]);
+    });
+  });
+  describe('mounting with a bounds and no supplied custom move', () => {
+    const bounds = [[32.958984, -5.353521], [43.50585, 5.615985]];
+    const props = {
+      ...simpleDefaultProps,
+      center: [12, 13],
+      bounds,
+    };
+    const component = factoryMountedComponent(props);
+    const map = component.node.getChildContext().map;
+    it('will move to the bounds', () => {
+      expect(map.transform.center.lng).to.be.within(bounds[0][0], bounds[1][0]);
+      expect(map.transform.center.lat).to.be.within(bounds[0][1], bounds[1][1]);
+    });
+  });
+  describe('updating with a new bounds', () => {
+    const component = factoryMountedComponent(simpleDefaultProps);
+    const bounds = [[32.958984, -5.353521], [43.50585, 5.615985]];
+    const nextProps = {
+      ...simpleDefaultProps,
+      bounds,
+      move: (target) => ({
+        command: 'fitBounds',
+        args: [target.bounds, { animate: false }],
+      }),
+    };
+    sinon.spy(nextProps, 'move');
+    component.setProps(nextProps);
+    const map = component.node.getChildContext().map;
+    it('will update the location', () => {
+      expect(nextProps.move.calledOnce).to.equal(true);
+      expect(map.transform.center.lng).to.be.within(bounds[0][0], bounds[1][0]);
+      expect(map.transform.center.lat).to.be.within(bounds[0][1], bounds[1][1]);
+    });
+  });
   describe('when updating viewport', () => {
     it('will use the provided move action', () => {
-      const component = getMountedComponent(simpleDefaultProps);
+      const component = factoryMountedComponent(simpleDefaultProps);
       const nextProps = {
         ...simpleDefaultProps,
         center: null,
@@ -184,7 +239,7 @@ describe('Map component', () => {
       expect(nextProps.move.calledOnce).to.equal(true);
     });
     it('will not trigger an update if the viewport has not updated', () => {
-      const component = getMountedComponent(simpleDefaultProps);
+      const component = factoryMountedComponent(simpleDefaultProps);
       const nextProps = {
         ...simpleDefaultProps,
         move: (target) => ({
@@ -202,7 +257,7 @@ describe('Map component', () => {
     ['flyTo', 'jumpTo', 'zoomTo', 'zoomIn', 'rotateTo', 'resetNorth', 'snapToNorth']
       .forEach((method) => {
         it(`can specify ${method}`, () => {
-          const component = getMountedComponent(simpleDefaultProps);
+          const component = factoryMountedComponent(simpleDefaultProps);
           sinon.spy(component.node._map, method);
           component.setProps({
             ...simpleDefaultProps,
@@ -218,7 +273,7 @@ describe('Map component', () => {
         });
       });
     it('can specify fitBounds', () => {
-      const component = getMountedComponent(simpleDefaultProps);
+      const component = factoryMountedComponent(simpleDefaultProps);
       sinon.spy(component.node._map, 'fitBounds');
       component.setProps({
         ...simpleDefaultProps,
@@ -239,7 +294,7 @@ describe('Map component', () => {
       expect(component.node._map.fitBounds.calledOnce).to.equal(true);
     });
     it('can specify panTo', () => {
-      const component = getMountedComponent(simpleDefaultProps);
+      const component = factoryMountedComponent(simpleDefaultProps);
       sinon.spy(component.node._map, 'panTo');
       component.setProps({
         ...simpleDefaultProps,
@@ -268,7 +323,7 @@ describe('Map component', () => {
     sinon.spy(mountProps, 'onChangeViewport');
     sinon.spy(mountProps, 'onClickFeatures');
     sinon.spy(mountProps, 'onHoverFeatures');
-    const component = getMountedComponent(mountProps);
+    const component = factoryMountedComponent(mountProps);
     const map = component.node._mapFacade;
     const mock = sinon.mock(component.node._mapFacade);
     mock.expects('queryRenderedFeatures').atLeast(4).returns([{}]);
@@ -323,6 +378,36 @@ describe('Map component', () => {
       it('will be called when moved', () => {
         // expect(mountProps.onChangeViewport.calledOnce).to.equal(true);
         expect(nextProps.onChangeViewport.calledOnce).to.equal(true);
+      });
+      it('will expose properties of the viewport', () => {
+        const result = nextProps.onChangeViewport.firstCall.args[0];
+        expect(result).to.exist;
+        expect(_.has(result, 'longitude')).to.equal(true);
+        expect(_.has(result, 'longitude')).to.equal(true);
+        expect(result.longitude).to.equal(10);
+        expect(result.latitude).to.equal(20);
+        expect(_.has(result, 'center')).to.equal(true);
+        expect(_.has(result, 'zoom')).to.equal(true);
+        expect(_.has(result, 'pitch')).to.equal(true);
+        expect(_.has(result, 'bearing')).to.equal(true);
+        expect(_.has(result, 'isDragging')).to.equal(true);
+        expect(_.has(result, 'isTouching')).to.equal(true);
+        expect(_.has(result, 'isZooming')).to.equal(true);
+        expect(_.has(result, 'isMoving')).to.equal(true);
+        expect(_.has(result, 'startDragLngLat')).to.equal(true);
+        expect(_.has(result, 'startTouchLngLat')).to.equal(true);
+        expect(_.has(result, 'startZoomLngLat')).to.equal(true);
+        expect(_.has(result, 'startMoveLngLat')).to.equal(true);
+        expect(_.has(result, 'startRotatingLngLat')).to.equal(true);
+        expect(_.has(result, 'startPitch')).to.equal(true);
+        expect(_.has(result, 'startBearing')).to.equal(true);
+        expect(_.has(result, 'startZoom')).to.equal(true);
+        expect(_.has(result, 'userControlled')).to.equal(true);
+      });
+      it('will supply the map accessor', () => {
+        const result = nextProps.onChangeViewport.firstCall.args[0];
+        expect(_.has(result, 'map')).to.equal(true);
+        expect(result.map).to.be.instanceof(MapFacade);
       });
     });
   });

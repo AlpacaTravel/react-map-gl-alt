@@ -4,11 +4,11 @@ import Immutable from 'immutable';
 
 import MapFacade from './facades/map';
 import { diff, has, mod, lngLatArray } from './utils';
-import { updateOptions as updateMapOptions } from './utils/map';
+import { updateOptions as updateMapOptions, performMoveAction } from './utils/map';
 import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
-// const noop = () => {};
-const move = (target) => ({ command: 'flyTo', args: [target] });
+const defaultMoveAction = (target) => ({ command: 'flyTo', args: [target] });
+const defaultFitBoundsAction = (target) => ({ command: 'fitBounds', args: [target.bounds, { animate: false }] });
 
 class Map extends React.Component {
   static supported() {
@@ -82,6 +82,15 @@ class Map extends React.Component {
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
 
+    // If we have a bounds
+    if (has(this.props, 'bounds')) {
+      const next = {
+        ...this.props,
+        move: this.props.move || defaultFitBoundsAction,
+      };
+      this._updateMapViewport({}, next);
+    }
+
     // Initial actions
     this._updateConvenienceHandlers({}, this.props);
     this._updateMapOptions({}, this.props);
@@ -91,7 +100,7 @@ class Map extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this._updateMapViewport(nextProps);
+    this._updateMapViewport(this.props, nextProps);
     this._updateConvenienceHandlers(this.props, nextProps);
     this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
     this._updateMapOptions(this.props, nextProps);
@@ -171,6 +180,7 @@ class Map extends React.Component {
       startBearing: this.state.startBearing,
       startZoom: this.state.startZoom,
       userControlled: this.state.userControlled,
+      map: e.target,
     });
   }
 
@@ -257,15 +267,15 @@ class Map extends React.Component {
     }
   }
 
-  _updateMapViewport(nextProps) {
+  _updateMapViewport(prior, next) {
     // Check if the user is controlling this currently
     if (this.state.userControlled === true) {
       return;
     }
 
     // Obtain the center
-    const propsCenter = lngLatArray(this.props);
-    const nextPropsCenter = lngLatArray(nextProps);
+    const propsCenter = lngLatArray(prior);
+    const nextPropsCenter = lngLatArray(next);
 
     const viewportChanged = (
       diff(
@@ -273,10 +283,11 @@ class Map extends React.Component {
         { center: propsCenter },
         { center: nextPropsCenter }
       ) ||
-      diff('zoom', this.props, nextProps) ||
+      diff('bounds', prior, next) ||
+      diff('zoom', prior, next) ||
       // diff('altitude', this.props, nextProps) ||
-      diff('bearing', this.props, nextProps) ||
-      diff('pitch', this.props, nextProps)
+      diff('bearing', prior, next) ||
+      diff('pitch', prior, next)
     );
 
     if (viewportChanged) {
@@ -284,46 +295,21 @@ class Map extends React.Component {
         center: nextPropsCenter,
         longitude: nextPropsCenter[0],
         latitude: nextPropsCenter[1],
-        zoom: nextProps.zoom,
+        bounds: next.bounds,
+        zoom: next.zoom,
         // altitude: nextProps.altitude,
-        bearing: nextProps.bearing,
-        pitch: nextProps.pitch,
+        bearing: next.bearing,
+        pitch: next.pitch,
         ...this.state,
       };
 
       // Use a move
-      const result = nextProps.move(target);
-      if (result.command && result.args) {
-        switch (result.command) {
-          case 'flyTo':
-            this._map.flyTo(...result.args);
-            break;
-          case 'fitBounds':
-            this._map.fitBounds(...result.args);
-            break;
-          case 'jumpTo':
-            this._map.jumpTo(...result.args);
-            break;
-          case 'panTo':
-            this._map.panTo(...result.args);
-            break;
-          case 'zoomTo':
-            this._map.zoomTo(...result.args);
-            break;
-          case 'zoomIn':
-            this._map.zoomIn(...result.args);
-            break;
-          case 'rotateTo':
-            this._map.rotateTo(...result.args);
-            break;
-          case 'resetNorth':
-            this._map.resetNorth(...result.args);
-            break;
-          case 'snapToNorth':
-            this._map.snapToNorth(...result.args);
-            break;
-          default: break;
-        }
+      const moveAction = next.move || defaultMoveAction;
+      const result = moveAction(target);
+      if (Array.isArray(result)) {
+        result.forEach(action => performMoveAction(this._map, action));
+      } else {
+        performMoveAction(this._map, result);
       }
     }
   }
@@ -384,6 +370,10 @@ Map.propTypes = {
   // altitude: React.PropTypes.number,
   bearing: React.PropTypes.number,
   pitch: React.PropTypes.number,
+  bounds: React.PropTypes.oneOfType([
+    React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
+    React.PropTypes.instanceOf(mapboxgl.LngLatBounds),
+  ]),
 
   minZoom: React.PropTypes.number,
   maxZoom: React.PropTypes.number,
@@ -428,8 +418,6 @@ Map.defaultProps = {
   pitch: 0,
 
   clickRadius: 15,
-
-  move,
 };
 
 Map.childContextTypes = {

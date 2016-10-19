@@ -2,7 +2,14 @@ import * as _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
 
 export const diff = (prop, obj1, obj2) => {
-  if (!_.has(obj1, prop) || !_.has(obj2, prop)) {
+  const obj1HasProp = _.has(obj1, prop);
+  const obj2HasProp = _.has(obj2, prop);
+  if (!obj1HasProp && !obj2HasProp) {
+    return false;
+  } else if (
+    (obj1HasProp && !obj2HasProp) ||
+    (!obj1HasProp && obj2HasProp)
+  ) {
     return true;
   }
   return !_.isEqual(obj1[prop], obj2[prop]);
@@ -13,6 +20,22 @@ export const has = (obj, key) => (_.has(obj, key));
 export const mod = (value, divisor) => {
   const modulus = value % divisor;
   return modulus < 0 ? divisor + modulus : modulus;
+};
+
+export const lngLatBoundsArray = (props) => {
+  if (!props.bounds) {
+    return null;
+  }
+
+  if (Array.isArray(props.bounds)) {
+    return props.bounds;
+  }
+
+  if (props.bounds instanceof mapboxgl.LngLatBounds) {
+    return props.bounds.toArray();
+  }
+
+  return null;
 };
 
 export const lngLatArray = (props) => {

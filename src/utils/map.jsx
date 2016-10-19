@@ -65,6 +65,41 @@ export const updateOptions = (map, current, next) => {
   }
 };
 
+export const performMoveAction = (map, action) => {
+  if (action.command && action.args) {
+    switch (action.command) {
+      case 'flyTo':
+        map.flyTo(...action.args);
+        break;
+      case 'fitBounds':
+        map.fitBounds(...action.args);
+        break;
+      case 'jumpTo':
+        map.jumpTo(...action.args);
+        break;
+      case 'panTo':
+        map.panTo(...action.args);
+        break;
+      case 'zoomTo':
+        map.zoomTo(...action.args);
+        break;
+      case 'zoomIn':
+        map.zoomIn(...action.args);
+        break;
+      case 'rotateTo':
+        map.rotateTo(...action.args);
+        break;
+      case 'resetNorth':
+        map.resetNorth(...action.args);
+        break;
+      case 'snapToNorth':
+        map.snapToNorth(...action.args);
+        break;
+      default: break;
+    }
+  }
+};
+
 export const cloneTransform = (transform) => {
   const clonedTransform = Object.create(Object.getPrototypeOf(transform));
   clonedTransform.tileSize = transform.tileSize; // Constant

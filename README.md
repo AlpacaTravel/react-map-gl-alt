@@ -6,6 +6,8 @@ react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
 based vector tile mapping library.
 
+This library improves API access and event access.
+
 ## Objectives
 
 * Use the latest available mapbox-gl-js release without version locking (Done)
@@ -91,24 +93,73 @@ return (
 );
 ```
 
+## Orienting the viewport
+
+You can provide a number of props to help control the location of the map. This
+includes providing center, longitude latitude or a bounds.
+
+* Supply a center or longitude/latitude props (center is prefered)
+* Supply bounds
+* Supply zoom/bearing/pitch
+
+```jsx
+// Using a bounds
+return (
+  <MapGl
+    bounds={bounds}
+    move={(target) => ({
+      command: 'fitBounds',
+      args: [
+        target.bounds,
+        { animate: false }
+      ],
+      })}
+  />
+);
+```
+
 ## The Map Facade
 
 To reduce the state managed outside of this component, the component offers a
 facade to the map object. The facade provides all accessor based methods for
 those familiar with the mapbox API spec (e.g. getCenter, getCanvas etc)
 
+```jsx
+const click = (e) => {
+  // Access the read only properties of the map
+  const map = e.target;  
+}
+
+...
+return (
+  <MapGL {...props}>
+    <MapEvents onClick={click} />
+  </MapGL>
+);
+```
+
 This is included along with events from the component/api, replacing the
 exposed 'target' event.
 
-Additionally, the ```cloneTransform``` method is added that supports
-accessing a clone of the current map transform. If you don't want to clone
-transform, the library provides the transform facade.
+### Transform
+
+The map facade also offers access to the map transform. This is done through
+a Transform Facade.
+
+```jsx
+// Access the transform facade (read only) through the map facade
+const transform = map.transform;
+
+// Optionally use a clone to have a working transform (detached);
+const clonedTransform = map.cloneTransform(); // version unlocked clone..
+```
 
 ## Controlling move animations
 
 You can provide new viewport details to the map, and as well have the
 opportunity to control the animation. This allows you to control the Camera and
 Animation options, as well as customise the usual Mapbox API args.
+
 
 ### Supported move animations
 
@@ -118,6 +169,10 @@ Animation options, as well as customise the usual Mapbox API args.
 * zoomTo
 * zoomIn
 * rotateTo
+* resetNorth
+* snapToNorth
+* fitBounds
+* panTo
 
 ### Usage with move function
 
@@ -268,6 +323,7 @@ through the ```onChangeViewport``` method.
 * latitude
 * center (new)
 * zoom
+* map (new - access to the map facade and transform/cloneTransform)
 
 # Testing
 
