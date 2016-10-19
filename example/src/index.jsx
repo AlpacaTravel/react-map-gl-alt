@@ -5,17 +5,15 @@ import MapEvents from '../../src/map-events';
 
 const mapboxApiAccessToken = process.env.MAPBOX_API_ACCESS_TOKEN;
 
-const flyTo = (target) => {
-  return ({
-    command: 'flyTo',
-    args: [{
-      ...target,
-      // Use animation options, duration etc.
-      duration: 1000,
-      curve: 1.8,
-    }],
-  });
-};
+const flyTo = (target) => ({
+  command: 'flyTo',
+  args: [{
+    ...target,
+    // Use animation options, duration etc.
+    duration: 1000,
+    curve: 1.8,
+  }],
+});
 
 const resetNorth = (target) => ({
   command: 'resetNorth',
@@ -61,7 +59,7 @@ class Example extends React.Component {
         style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
       >
         <div>
-          <button onClick={() => this.setState({ target: { zoom: 10, center: [144.9633200, -37.8140000] }, motion: flyTo })}>
+          <button onClick={() => this.setState({ target: { ...this.state.viewport, zoom: 10, center: [144.9633200, -37.8140000] }, motion: flyTo })}>
             Goto Melbourne
           </button>
           <button onClick={() => this.setState({ target: { ...this.state.viewport, bearing: 0, pitch: 0 }, motion: resetNorth })}>

@@ -39,6 +39,8 @@ This package works with compatible mapbox-gl-js build approaches, including
 webpack. This library supports the current 'dist' method recommended by
 mapbox-gl-js as of 0.25.0.
 
+See [webpack example](https://github.com/AlpacaTravel/react-map-gl-alt/blob/master/example/webpack.config.js)
+
 ## Running the examples
 
 Clone the example to your local fs. The example shows a simple full screen
