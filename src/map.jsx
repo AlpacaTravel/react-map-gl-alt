@@ -179,7 +179,7 @@ class Map extends React.Component {
       startPitch: this.state.startPitch,
       startBearing: this.state.startBearing,
       startZoom: this.state.startZoom,
-      userControlled: this.state.userControlled,
+      isUserControlled: this.state.userControlled,
       map: e.target,
     });
   }
@@ -191,7 +191,7 @@ class Map extends React.Component {
         startBearing: event.target.getBearing(),
         startPitch: event.target.getPitch(),
         startZoom: event.target.getZoom(),
-        userControlled: (has(event, 'originalEvent')),
+        isUserControlled: (has(event, 'originalEvent')),
       });
     });
     this._map.on('moveend', () => {
@@ -200,7 +200,7 @@ class Map extends React.Component {
         startBearing: null,
         startPitch: null,
         startZoom: null,
-        userControlled: false,
+        isUserControlled: false,
       });
     });
 

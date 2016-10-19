@@ -402,7 +402,7 @@ describe('Map component', () => {
         expect(_.has(result, 'startPitch')).to.equal(true);
         expect(_.has(result, 'startBearing')).to.equal(true);
         expect(_.has(result, 'startZoom')).to.equal(true);
-        expect(_.has(result, 'userControlled')).to.equal(true);
+        expect(_.has(result, 'isUserControlled')).to.equal(true);
       });
       it('will supply the map accessor', () => {
         const result = nextProps.onChangeViewport.firstCall.args[0];

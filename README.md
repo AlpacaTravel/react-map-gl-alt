@@ -111,7 +111,7 @@ return (
       command: 'fitBounds',
       args: [
         target.bounds,
-        { animate: false }
+        { animate: false, padding: 50 }
       ],
       })}
   />
@@ -318,7 +318,7 @@ through the ```onChangeViewport``` method.
 * startZoomLngLat (new)
 * startPitch
 * startBearing
-* userControlled (new)
+* isUserControlled (new)
 * longitude
 * latitude
 * center (new)
