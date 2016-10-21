@@ -85,6 +85,9 @@ export const performMoveAction = (map, action) => {
       case 'zoomIn':
         map.zoomIn(...action.args);
         break;
+      case 'zoomOut':
+        map.zoomOut(...action.args);
+        break;
       case 'rotateTo':
         map.rotateTo(...action.args);
         break;
@@ -93,6 +96,9 @@ export const performMoveAction = (map, action) => {
         break;
       case 'snapToNorth':
         map.snapToNorth(...action.args);
+        break;
+      case 'easeTo':
+        map.easeTo(...action.args);
         break;
       default: break;
     }

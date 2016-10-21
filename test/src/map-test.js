@@ -254,7 +254,7 @@ describe('Map component', () => {
     it('will not update the viewport while the user is in control');
   });
   describe('when providing a move method', () => {
-    ['flyTo', 'jumpTo', 'zoomTo', 'zoomIn', 'rotateTo', 'resetNorth', 'snapToNorth']
+    ['flyTo', 'jumpTo', 'zoomTo', 'zoomIn', 'zoomOut', 'rotateTo', 'resetNorth', 'snapToNorth', 'easeTo']
       .forEach((method) => {
         it(`can specify ${method}`, () => {
           const component = factoryMountedComponent(simpleDefaultProps);

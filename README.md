@@ -104,6 +104,7 @@ includes providing center, longitude latitude or a bounds.
 * Supply bounds
 * Supply zoom/bearing/pitch
 
+
 ```jsx
 // Using a bounds
 return (
@@ -156,12 +157,14 @@ const transform = map.transform;
 const clonedTransform = map.cloneTransform(); // version unlocked clone..
 ```
 
+The cloned transform can provide the ability to calculate zoom around and other
+various viewport calculations in a interaction controlled state.
+
 ## Controlling move animations
 
 You can provide new viewport details to the map, and as well have the
 opportunity to control the animation. This allows you to control the Camera and
 Animation options, as well as customise the usual Mapbox API args.
-
 
 ### Supported move animations
 
@@ -169,12 +172,13 @@ Animation options, as well as customise the usual Mapbox API args.
 * jumpTo
 * panTo
 * zoomTo
-* zoomIn
+* easeTo
 * rotateTo
-* resetNorth
-* snapToNorth
 * fitBounds
 * panTo
+
+Other possible move control include zoomIn/zoomOut, snapToNorth, resetNorth. Be
+cautious using these as you need to anticipate their state.
 
 ### Usage with move function
 

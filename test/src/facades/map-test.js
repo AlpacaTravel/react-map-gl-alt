@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import MapFacade from '../../../src/facades/map';
 import TransformFacade from '../../../src/facades/transform';
-import { TestTransform } from '../utils/transform-test';
+import Transform from 'mapbox-gl/js/geo/transform';
 
 describe('Map Facade', () => {
   const mapMock = {
@@ -24,7 +24,7 @@ describe('Map Facade', () => {
     getZoom: sinon.spy(),
     getBearing: sinon.spy(),
     getPitch: sinon.spy(),
-    transform: new TestTransform(),
+    transform: new Transform(),
   };
   const facade = new MapFacade(mapMock);
   sinon.spy(facade._evented, 'on');
@@ -45,7 +45,7 @@ describe('Map Facade', () => {
   });
   it('can cloneTransform', () => {
     const clone = facade.cloneTransform();
-    expect(clone).to.be.an.instanceof(TestTransform);
+    expect(clone).to.be.an.instanceof(Transform);
     expect(clone).to.not.equal(mapMock.transform);
   });
   it('can expose hasClass', () => {

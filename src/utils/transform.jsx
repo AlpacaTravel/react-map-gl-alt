@@ -8,10 +8,17 @@ export const cloneTransform = (transform) => {
   clonedTransform.latRange = transform.latRange;
   clonedTransform.width = transform.width;
   clonedTransform.height = transform.height;
-  clonedTransform.center = mapboxgl.LngLat.convert([transform.center.lng, transform.center.lat]);
-  clonedTransform.zoom = transform.zoom;
+  clonedTransform.scale = transform.scale;
+  clonedTransform.tileZoom = transform.tileZoom;
+  clonedTransform.zoomFraction = transform.zoomFraction;
   clonedTransform.angle = transform.angle;
-  clonedTransform.altitude = transform.altitude;
-  clonedTransform.pitch = transform.pitch;
+  // Ensure we don't hold onto the original object reference
+  // must access '_' as modifier/accessors perform actions on the transform
+  clonedTransform._center = mapboxgl.LngLat.convert([transform.center.lng, transform.center.lat]);
+  clonedTransform._altitude = transform.altitude;
+  clonedTransform._pitch = transform.pitch;
+  clonedTransform._unmodified = transform._unmodified;
+  // Last modifier calls calculatePosMatrix
+  clonedTransform.zoom = transform.zoom;
   return clonedTransform;
 };
