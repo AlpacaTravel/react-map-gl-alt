@@ -180,7 +180,7 @@ class Map extends React.Component {
       startBearing: this.state.startBearing,
       startZoom: this.state.startZoom,
       isUserControlled: this.state.userControlled,
-      map: e.target,
+      map: this._mapFacade,
     });
   }
 
