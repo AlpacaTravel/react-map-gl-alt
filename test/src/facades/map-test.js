@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import MapFacade from '../../../src/facades/map';
 import TransformFacade from '../../../src/facades/transform';
-import { TestTransform } from '../utils/map-test';
+import { TestTransform } from '../utils/transform-test';
 
 describe('Map Facade', () => {
   const mapMock = {

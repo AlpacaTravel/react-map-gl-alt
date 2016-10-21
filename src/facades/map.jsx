@@ -1,5 +1,5 @@
 import Evented from '../evented';
-import { cloneTransform } from '../utils/map';
+import { cloneTransform } from '../utils/transform';
 import Transform from './transform';
 
 export default class Map {
