@@ -144,6 +144,8 @@ return (
 This is included along with events from the component/api, replacing the
 exposed 'target' event.
 
+Note: This Map Facade is available to children context.
+
 ### Transform
 
 The map facade also offers access to the map transform. This is done through
@@ -159,6 +161,54 @@ const clonedTransform = map.cloneTransform(); // version unlocked clone..
 
 The cloned transform can provide the ability to calculate zoom around and other
 various viewport calculations in a interaction controlled state.
+
+### Available Events
+
+All the current documented events are accessible in this implementation. All
+are available through using the MapEvents component with the prefix 'on', e.g.
+onClick, onLoad, onMouseMove, onDrag etc.
+
+* onStyleLoad
+* onResize
+* onWebGLContextLost
+* onWebGLContextRestored
+* onRemove
+* onDataLoading
+* onRender
+* onLoad
+* onData
+* onError
+* onMouseOut
+* onMouseDown
+* onMouseUp
+* onMouseMove
+* onTouchStart
+* onTouchEnd
+* onTouchMove
+* onTouchCancel
+* onClick
+* onDblClick
+* onContextMenu
+* onMoveStart
+* onMove
+* onMoveEnd
+* onZoomStart
+* onZoomEnd
+* onZoom
+* onBoxZoomCancel
+* onBoxZoomEnd
+* onBoxZoomStart
+* onRotateStart
+* onRotateEnd
+* onDragStart
+* onDragEnd
+* onDrag
+* onPitch
+
+Note: This component can be mounted many times in the children of the MapGL
+component, enabling you to have many different function interactions depending
+on what is mounted. There is support for multiple 'onClick' etc. listeners
+using this method.
 
 ## Controlling move animations
 
