@@ -1,7 +1,6 @@
-import mapboxgl from 'mapbox-gl';
 import Immutable, { Map } from 'immutable';
 import { diff as diffStyles } from 'mapbox-gl-style-spec';
-import * as _ from 'lodash';
+import { isEqual, has } from './index';
 
 export const getInteractiveLayerIds = (mapStyle) => {
   if (Map.isMap(mapStyle) && mapStyle.has('layers')) {
@@ -18,71 +17,92 @@ export const getInteractiveLayerIds = (mapStyle) => {
   return [];
 };
 
-// Identify style or source updates
-export const update = (map, currentMapStyle, nextMapStyle) => {
-  let before = currentMapStyle;
-  let after = nextMapStyle;
-
-  // String styles
-  if (before !== after && (typeof after !== 'object')) {
-    map.setStyle(after);
-    return;
+export const areGeoJSONSourcePropertiesSimilar = (source, newSource) => {
+  const compareableOriginal = {};
+  const compareableNew = {};
+  const geojsonVtOptionsExtent = source.workerOptions.geojsonVtOptions.extent;
+  const tileSize = source.tileSize;
+  const scale = geojsonVtOptionsExtent / tileSize;
+  if (has(newSource, 'buffer')) {
+    compareableOriginal.buffer = source.workerOptions.geojsonVtOptions.buffer / scale;
+    compareableNew.buffer = newSource.buffer;
   }
-
-  // If we can compare quickly
-  if (Immutable.Map.isMap(nextMapStyle) &&
-    (nextMapStyle.equals(currentMapStyle))) {
-    return;
+  if (has(newSource, 'tolerance')) {
+    compareableOriginal.tolerance = source.workerOptions.geojsonVtOptions.tolerance / scale;
+    compareableNew.tolerance = newSource.tolerance;
   }
-
-  // If we are dealing with immutable elements
-  if (Immutable.Map.isMap(currentMapStyle)) {
-    before = currentMapStyle.toJS();
+  if (has(newSource, 'maxzoom')) {
+    compareableOriginal.maxzoom = source.workerOptions.geojsonVtOptions.maxZoom;
+    compareableNew.maxzoom = newSource.maxzoom;
   }
-  if (Immutable.Map.isMap(nextMapStyle)) {
-    after = nextMapStyle.toJS();
+  if (has(newSource, 'cluster')) {
+    compareableOriginal.cluster = source.workerOptions.cluster;
+    compareableNew.cluster = newSource.cluster;
   }
+  if (has(newSource, 'clusterMaxZoom')) {
+    compareableOriginal.clusterMaxZoom = source.workerOptions.superclusterOptions.maxZoom;
+    compareableNew.clusterMaxZoom = newSource.clusterMaxZoom;
+  }
+  if (has(newSource, 'clusterRadius')) {
+    compareableOriginal.clusterRadius = source.workerOptions.superclusterOptions.radius / scale;
+    compareableNew.clusterRadius = newSource.clusterRadius;
+  }
+  return (source.type === 'geojson' && newSource.type === 'geojson') && isEqual(compareableOriginal, compareableNew);
+};
 
-  // Compare
-  const changes = diffStyles(before, after);
+export const processStyleChanges = (map, changes, mapStyle, nextMapStyle) => {
   const skipAddSources = [];
   changes.forEach((change) => {
-    // Bypass certain commands
+    const targetSource = change.args[0];
+
+    // Bypass certain commands (e.g. where we are reusing sources)
     if (skipAddSources.length && change.command === 'addSource') {
-      const sourceId = change.args[0];
-      if (_.find(skipAddSources, sourceId)) {
+      if (skipAddSources.indexOf(targetSource) > -1) {
         return;
       }
     }
 
     // Check if we are just updating the data
     if (change.command === 'removeSource') {
-      const targetSource = change.args[0];
       if (nextMapStyle.sources[targetSource]) {
         const newSource = nextMapStyle.sources[targetSource];
         const oldSource = map.getSource(targetSource);
-        if (oldSource instanceof mapboxgl.GeoJSONSource) {
-          if (
-            (newSource.maxzoom === undefined ||
-              newSource.maxzoom === oldSource.geojsonVtOptions.maxZoom) &&
-            (newSource.buffer === undefined ||
-              newSource.buffer === oldSource.geojsonVtOptions.buffer) &&
-            (newSource.tolerance === undefined ||
-              newSource.tolerance === oldSource.geojsonVtOptions.tolerance) &&
-            (newSource.cluster === undefined ||
-              newSource.cluster === oldSource.cluster) &&
-            (newSource.clusterRadius === undefined ||
-              newSource.clusterRadius === oldSource.superclusterOptions.radius) &&
-            (newSource.clusterMaxZoom === undefined ||
-              newSource.clusterMaxZoom === oldSource.superclusterOptions.maxZoom)
-          ) {
-            oldSource.setData(newSource.data);
-            skipAddSources.push(targetSource); // Don't re-add
-            return;
-          }
+        if (areGeoJSONSourcePropertiesSimilar(oldSource, newSource)) {
+          oldSource.setData(newSource.data);
+          skipAddSources.push(targetSource); // Don't re-add
+          return;
         }
       }
     }
+
     map[change.command].apply(map, change.args);
   });
+};
+
+// Identify style or source updates
+export const update = (map, mapStyle, nextMapStyle) => {
+  // String styles
+  if (mapStyle !== nextMapStyle && (typeof nextMapStyle !== 'object')) {
+    map.setStyle(nextMapStyle);
+    return;
+  }
+
+  // If we can compare quickly
+  if (Immutable.Map.isMap(nextMapStyle) &&
+    (nextMapStyle.equals(mapStyle))) {
+    return;
+  }
+
+  // If we are dealing with immutable elements
+  let before = mapStyle;
+  let after = nextMapStyle;
+  if (Immutable.Map.isMap(mapStyle)) {
+    before = mapStyle.toJS();
+  }
+  if (Immutable.Map.isMap(nextMapStyle)) {
+    after = nextMapStyle.toJS();
+  }
+
+  // Process the style differences
+  processStyleChanges(map, diffStyles(before, after), mapStyle, nextMapStyle);
 };

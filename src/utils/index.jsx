@@ -1,9 +1,12 @@
 import * as _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
 
+export const isEqual = (prop1, prop2) => (_.isEqual(prop1, prop2));
+export const has = (obj, key) => (_.has(obj, key));
+
 export const diff = (prop, obj1, obj2) => {
-  const obj1HasProp = _.has(obj1, prop);
-  const obj2HasProp = _.has(obj2, prop);
+  const obj1HasProp = has(obj1, prop);
+  const obj2HasProp = has(obj2, prop);
   if (!obj1HasProp && !obj2HasProp) {
     return false;
   } else if (
@@ -12,10 +15,8 @@ export const diff = (prop, obj1, obj2) => {
   ) {
     return true;
   }
-  return !_.isEqual(obj1[prop], obj2[prop]);
+  return !isEqual(obj1[prop], obj2[prop]);
 };
-
-export const has = (obj, key) => (_.has(obj, key));
 
 export const mod = (value, divisor) => {
   const modulus = value % divisor;
