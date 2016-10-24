@@ -105,4 +105,21 @@ describe('Transform Facade', () => {
     wrapper.calculatePosMatrix('param');
     expect(transformMock.calculatePosMatrix.withArgs('param').calledOnce).to.equal(true);
   });
+  it('functions are bound to the transform facade', () => {
+    expect(wrapper.coveringZoomLevel.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.coveringTiles.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.zoomScale.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.scaleZoom.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.lngX.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.latY.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.xLng.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.yLng.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.locationPoint.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.pointLocation.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.locationCoordinate.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.coordinateLocation.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.pointCoordinate.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.coordinatePoint.prototype).to.equal(Function.bind.prototype);
+    expect(wrapper.calculatePosMatrix.prototype).to.equal(Function.bind.prototype);
+  });
 });

@@ -7,6 +7,25 @@ export default class Map {
     this._map = map;
     this._evented = new Evented(map, this);
     this.transform = new Transform(map.transform);
+
+    // Bind the context to this
+    this.on = this.on.bind(this);
+    this.off = this.off.bind(this);
+    this.hasClass = this.hasClass.bind(this);
+    this.getClasses = this.getClasses.bind(this);
+    this.getBounds = this.getBounds.bind(this);
+    this.project = this.project.bind(this);
+    this.unproject = this.unproject.bind(this);
+    this.queryRenderedFeatures = this.queryRenderedFeatures.bind(this);
+    this.querySourceFeatures = this.querySourceFeatures.bind(this);
+    this.getContainer = this.getContainer.bind(this);
+    this.getCanvasContainer = this.getCanvasContainer.bind(this);
+    this.loaded = this.loaded.bind(this);
+    this.getCenter = this.getCenter.bind(this);
+    this.getZoom = this.getZoom.bind(this);
+    this.getBearing = this.getBearing.bind(this);
+    this.getPitch = this.getPitch.bind(this);
+    this.cloneTransform = this.cloneTransform.bind(this);
   }
   on(type, action) {
     this._evented.on(type, action);

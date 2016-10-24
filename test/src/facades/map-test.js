@@ -114,4 +114,23 @@ describe('Map Facade', () => {
     facade.getPitch();
     expect(mapMock.getPitch.calledOnce).to.equal(true);
   });
+  it('functions are bound to the map facade', () => {
+    expect(facade.on.prototype).to.equal(Function.bind.prototype);
+    expect(facade.off.prototype).to.equal(Function.bind.prototype);
+    expect(facade.hasClass.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getClasses.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getBounds.prototype).to.equal(Function.bind.prototype);
+    expect(facade.project.prototype).to.equal(Function.bind.prototype);
+    expect(facade.unproject.prototype).to.equal(Function.bind.prototype);
+    expect(facade.queryRenderedFeatures.prototype).to.equal(Function.bind.prototype);
+    expect(facade.querySourceFeatures.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getContainer.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getCanvasContainer.prototype).to.equal(Function.bind.prototype);
+    expect(facade.loaded.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getCenter.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getZoom.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getBearing.prototype).to.equal(Function.bind.prototype);
+    expect(facade.getPitch.prototype).to.equal(Function.bind.prototype);
+    expect(facade.cloneTransform.prototype).to.equal(Function.bind.prototype);
+  });
 });

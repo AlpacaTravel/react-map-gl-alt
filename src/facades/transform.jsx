@@ -1,6 +1,23 @@
 export default class Transform {
   constructor(transform) {
     this._transform = transform;
+
+    // Bind functions to this
+    this.coveringZoomLevel = this.coveringZoomLevel.bind(this);
+    this.coveringTiles = this.coveringTiles.bind(this);
+    this.zoomScale = this.zoomScale.bind(this);
+    this.scaleZoom = this.scaleZoom.bind(this);
+    this.lngX = this.lngX.bind(this);
+    this.latY = this.latY.bind(this);
+    this.xLng = this.xLng.bind(this);
+    this.yLng = this.yLng.bind(this);
+    this.locationPoint = this.locationPoint.bind(this);
+    this.pointLocation = this.pointLocation.bind(this);
+    this.locationCoordinate = this.locationCoordinate.bind(this);
+    this.coordinateLocation = this.coordinateLocation.bind(this);
+    this.pointCoordinate = this.pointCoordinate.bind(this);
+    this.coordinatePoint = this.coordinatePoint.bind(this);
+    this.calculatePosMatrix = this.calculatePosMatrix.bind(this);
   }
   get minZoom() {
     return this._transform.minZoom;
