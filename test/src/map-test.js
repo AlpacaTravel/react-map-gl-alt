@@ -55,55 +55,76 @@ describe('Map component', () => {
     });
   });
   describe('while receiving props', () => {
+    let map = null;
     const component = factoryMountedComponent(simpleDefaultProps);
-    sinon.spy(component.node, '_updateMapViewport');
-    sinon.spy(component.node, '_updateMapOptions');
-    sinon.spy(component.node, '_updateStyle');
-    sinon.spy(component.node, '_updateConvenienceHandlers');
-    component.setProps({
-      ...simpleDefaultProps,
-      center: null,
-      longitude: 10,
-      latitude: 20,
-      mapStyle: Immutable.fromJS({
-        version: 8,
-        sources: {
-          example: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [],
+    const result = new Promise((fulfill) => {
+      sinon.spy(component.node, '_updateMapViewport');
+      sinon.spy(component.node, '_updateMapOptions');
+      sinon.spy(component.node, '_updateStyle');
+      sinon.spy(component.node, '_updateConvenienceHandlers');
+      map = component.node.getChildContext().map;
+
+      map.on('load', () => {
+        component.setProps({
+          ...simpleDefaultProps,
+          center: null,
+          longitude: 10,
+          latitude: 20,
+          mapStyle: Immutable.fromJS({
+            version: 8,
+            center: [10, 20],
+            zoom: 12.5,
+            sources: {
+              example: {
+                type: 'geojson',
+                data: {
+                  type: 'FeatureCollection',
+                  features: [],
+                },
+              },
             },
-          },
-        },
-        layers: [],
-      }),
-      maxZoom: 19,
-      move: (target) => ({
-        command: 'jumpTo',
-        args: [target],
-      }),
+            layers: [],
+          }),
+          maxZoom: 19,
+          move: (target) => ({
+            command: 'jumpTo',
+            args: [target],
+          }),
+        });
+        fulfill();
+      });
     });
-    const map = component.node.getChildContext().map;
-    it('will call update the options', () => {
-      // TODO: Don't spy on the internal
-      expect(component.node._updateMapOptions.calledOnce).to.equal(true);
-      expect(map.transform.maxZoom).to.be.equal(19);
+    it('will call update the options', (done) => {
+      result.then(() => {
+        // TODO: Don't spy on the internal
+        expect(component.node._updateMapOptions.calledOnce).to.equal(true);
+        expect(map.transform.maxZoom).to.be.equal(19);
+        done();
+      });
     });
-    it('will call update styles', () => {
-      // TODO: Don't spy on the internal
-      expect(component.node._updateStyle.calledOnce).to.equal(true);
+    it('will call update styles', (done) => {
+      result.then(() => {
+        // TODO: Don't spy on the internal
+        expect(component.node._updateStyle.calledOnce).to.equal(true);
+        done();
+      });
     });
-    it('will call update the viewport', () => {
-      // TODO: Don't spy on the internal
-      expect(component.node._updateMapViewport.calledOnce).to.equal(true);
-      const center = map.transform.center;
-      expect(Math.round(center.lng)).to.equal(10);
-      expect(Math.round(center.lat)).to.equal(20);
+    it('will call update the viewport', (done) => {
+      result.then(() => {
+        // TODO: Don't spy on the internal
+        expect(component.node._updateMapViewport.calledOnce).to.equal(true);
+        const center = map.transform.center;
+        expect(Math.round(center.lng)).to.equal(10);
+        expect(Math.round(center.lat)).to.equal(20);
+        done();
+      });
     });
-    it('will call update convenience handlers', () => {
-      // TODO: Don't spy on the internal
-      expect(component.node._updateConvenienceHandlers.calledOnce).to.equal(true);
+    it('will call update convenience handlers', (done) => {
+      result.then(() => {
+        // TODO: Don't spy on the internal
+        expect(component.node._updateConvenienceHandlers.calledOnce).to.equal(true);
+      });
+      done();
     });
   });
   describe('mounting without a center', () => {
@@ -408,6 +429,44 @@ describe('Map component', () => {
         const result = nextProps.onChangeViewport.firstCall.args[0];
         expect(_.has(result, 'map')).to.equal(true);
         expect(result.map).to.be.instanceof(MapFacade);
+      });
+    });
+  });
+  describe('when updating a map style', () => {
+    const component = factoryMountedComponent(simpleDefaultProps);
+    const result = new Promise(fulfill => {
+      const nextProps = {
+        ...simpleDefaultProps,
+        center: null,
+        longitude: 12,
+        latitude: 13,
+        mapStyle: Immutable.fromJS({
+          ...simpleDefaultProps.mapStyle.toJS(),
+          layers: [
+            {
+              id: 'background',
+              type: 'background',
+              interactive: true,
+              paint: {
+                'background-color': '#dedede',
+              },
+            },
+          ],
+        }),
+        move: (target) => ({
+          command: 'jumpTo',
+          args: [target],
+        }),
+      };
+      sinon.spy(component.node._map, 'setStyle');
+      sinon.spy(component.node, '_updateStyle');
+      component.setProps(nextProps);
+      fulfill();
+    });
+    it('will setStyle', () => {
+      result.then(() => {
+        expect(component.node._updateStyle.calledOnce).to.equal(true);
+        expect(component.node._map.setStyle.calledOnce).to.equal(true);
       });
     });
   });

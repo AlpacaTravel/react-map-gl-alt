@@ -234,9 +234,7 @@ class Map extends React.Component {
   }
 
   _updateStyle(previousStyle, nextStyle) {
-    if (this.state.isLoaded === true) {
-      updateStyle(this._map, previousStyle, nextStyle);
-    }
+    updateStyle(this._map, previousStyle, nextStyle);
   }
 
   _updateMapOptions(previous, next) {

@@ -180,7 +180,7 @@ describe('Styles util', () => {
           // Add a geoJSON source
           style.addSource('test', geoJSONSourceA);
           // Process the changes
-          processStyleChanges(mapMock, changes, style, nextStyle);
+          processStyleChanges(mapMock, changes, nextStyle);
           // Fulfill
           fulfill();
         }).on('error', reject);

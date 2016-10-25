@@ -50,7 +50,7 @@ export const areGeoJSONSourcePropertiesSimilar = (source, newSource) => {
   return (source.type === 'geojson' && newSource.type === 'geojson') && isEqual(compareableOriginal, compareableNew);
 };
 
-export const processStyleChanges = (map, changes, mapStyle, nextMapStyle) => {
+export const processStyleChanges = (map, changes, nextMapStyle) => {
   const skipAddSources = [];
   changes.forEach((change) => {
     const targetSource = change.args[0];
@@ -64,7 +64,7 @@ export const processStyleChanges = (map, changes, mapStyle, nextMapStyle) => {
 
     // Check if we are just updating the data
     if (change.command === 'removeSource') {
-      if (nextMapStyle.sources[targetSource]) {
+      if (nextMapStyle.sources && nextMapStyle.sources[targetSource]) {
         const newSource = nextMapStyle.sources[targetSource];
         const oldSource = map.getSource(targetSource);
         if (areGeoJSONSourcePropertiesSimilar(oldSource, newSource)) {
@@ -104,5 +104,5 @@ export const update = (map, mapStyle, nextMapStyle) => {
   }
 
   // Process the style differences
-  processStyleChanges(map, diffStyles(before, after), mapStyle, nextMapStyle);
+  processStyleChanges(map, diffStyles(before, after), after);
 };
