@@ -28,6 +28,9 @@ export default class Transform {
   get worldSize() {
     return this._transform.worldSize;
   }
+  get scale() {
+    return this._transform.scale;
+  }
   get centerPoint() {
     return this._transform.centerPoint;
   }

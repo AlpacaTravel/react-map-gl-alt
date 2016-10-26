@@ -21,15 +21,25 @@ describe('Transform Facade', () => {
     pointCoordinate: sinon.spy(),
     coordinatePoint: sinon.spy(),
     calculatePosMatrix: sinon.spy(),
-    minZoom: 0,
+    minZoom: 1,
   };
   // sinon.spy(transformMock, 'minZoom', () => {});
   const wrapper = new TransformFacade(transformMock);
-  // it.only('can expose minZoom', () => {
-  //   /* eslint no-unused-expressions: 0 */
-  //   wrapper.minZoom;
-  //   expect(transformMock.minZoom.calledOnce).to.equal(true);
-  // });
+  describe('while exposing properties', () => {
+    ['minZoom', 'maxZoom', 'worldSize', 'scale', 'centerPoint', 'size', 'bearing',
+      'pitch', 'altitude', 'zoom', 'center', 'x', 'y', 'point'].forEach((prop) => {
+        it(`will expose ${prop} property`, (done) => {
+          /* eslint no-unused-expressions: 0 */
+          expect(wrapper[prop]).to.equal(transformMock[prop]);
+          try {
+            wrapper[prop] = 'value';
+            done(`Should not allow transform ${prop} value to be set`);
+          } catch (err) {
+            done();
+          }
+        });
+      });
+  });
   it('can expose coveringZoomLevel', () => {
     transformMock.coveringZoomLevel.withArgs('param');
     wrapper.coveringZoomLevel('param');
