@@ -359,6 +359,26 @@ import Map from 'react-map-gl-alt';
 Please note; This project does not currently package the overlays included with
 the react-map-gl project.
 
+### Using ViewportMercator
+
+You can still use the ViewportMercator supplying it the width/height. As this
+library supports flex/vh and percentage based values, you can pass them in
+as below;
+
+```js
+import ViewportMercator from 'viewport-mercator-project';
+
+// Obtain the width and height accurately from the canvas drawn on screen
+const { width, height } = viewport.map.getCanvas();
+
+// Create the mercator from your captured viewport
+const originalMercator = ViewportMercator({
+  ...viewport, // Viewport obtained by onChangeViewport etc.
+  width,
+  height,
+});
+```
+
 ### Extended onChangeViewport
 
 This library also exposes several new properties to the viewport state exposed
