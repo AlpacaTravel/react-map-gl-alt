@@ -228,8 +228,9 @@ class Map extends React.Component {
     this._map.on('rotateend', () => {
       this.setState({ isRotating: false, startRotatingLngLat: null });
     });
-    this._map.on('loaded', () => {
+    this._map.on('load', () => {
       this.setState({ isLoaded: true });
+      this._onChangeViewport({ target: this._mapFacade });
     });
   }
 

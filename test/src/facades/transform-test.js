@@ -22,6 +22,19 @@ describe('Transform Facade', () => {
     coordinatePoint: sinon.spy(),
     calculatePosMatrix: sinon.spy(),
     minZoom: 1,
+    maxZoom: 2,
+    worldSize: 3,
+    scale: 4,
+    centerPoint: 5,
+    size: 6,
+    bearing: 7,
+    pitch: 8,
+    altitude: 9,
+    zoom: 10,
+    center: 11,
+    x: 12,
+    y: 13,
+    point: 14,
   };
   // sinon.spy(transformMock, 'minZoom', () => {});
   const wrapper = new TransformFacade(transformMock);
