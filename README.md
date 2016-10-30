@@ -100,8 +100,8 @@ return (
 You can provide a number of props to help control the location of the map. This
 includes providing center, longitude latitude or a bounds.
 
-* Supply a center or longitude/latitude props (center is prefered)
-* Supply bounds
+* Supply a center or longitude/latitude props (LngLat like center is prefered)
+* Supply bounds (e.g. LngLatBounds like)
 * Supply zoom/bearing/pitch
 
 
@@ -120,6 +120,25 @@ return (
   />
 );
 ```
+
+## Map Options
+
+You can adjust the map following map options through the ```<Map />``` exposed
+props;
+
+* scrollZoomDisabled (default false)
+* dragRotateDisabled (default false)
+* dragPanDisabled (default false)
+* keyboardDisabled (default false)
+* doubleClickZoomDisabled (default false)
+* touchZoomRotateDisabled (default false)
+* trackResizeDisabled (default false)
+* interactiveDisabled (default false)
+* attributionControlDisabled (default false)
+* failIfMajorPerformanceCaveatDisabled (default false)
+* preserveDrawingBuffer (default true)
+* bearingSnap (default 7)
+* mapClasses (default [])
 
 ## The Map Facade
 
@@ -322,6 +341,14 @@ across easily.
 Your visualisations and overlays will still be compatible also.
 
 ### Support using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
+
+The following props expose similar behaviour to the react-map-gl library.
+
+* onChangeViewport
+* onHoverFeatures
+* onClickFeatures
+* clickRadius (default 15)
+* ignoreEmptyFeatures (default false)
 
 ```jsx
 import MapGL from 'react-map-gl-alt';
