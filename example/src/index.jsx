@@ -49,7 +49,7 @@ class Example extends React.Component {
   _onClick(e) {
     // Access features under cursor through safe non-mutable map facade
     const features = e.target.queryRenderedFeatures(e.point);
-    console.log(features);
+    console.log(e, features);
   }
 
   render() {
@@ -73,6 +73,7 @@ class Example extends React.Component {
           onChangeViewport={this._onChangeViewport}
           style={{ display: 'flex', flex: 1 }}
           move={this.state.motion}
+          worldCopyJumpDisabled={false}
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}

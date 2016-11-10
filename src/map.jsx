@@ -1,6 +1,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
+import { default as addResizeListener, unbind as removeResizeListener } from 'element-resize-event';
 
 import MapFacade from './facades/map';
 import { diff, has, mod, lngLatArray } from './utils';
@@ -46,6 +47,7 @@ class Map extends React.Component {
     this._simpleClick = this._simpleClick.bind(this);
     this._simpleHover = this._simpleHover.bind(this);
     this._onChangeViewport = this._onChangeViewport.bind(this);
+    this._resizedContainer = this._resizedContainer.bind(this);
   }
 
   // Scrub map access to events
@@ -97,6 +99,9 @@ class Map extends React.Component {
 
     // Listen to some of the dispatched events
     this._listenStateEvents();
+
+    // Add in event listeners for the container
+    addResizeListener(this.refs.container, this._resizedContainer);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,8 +112,16 @@ class Map extends React.Component {
   }
 
   componentWillUnmount() {
+    // Remove in event listeners for the container
+    // Pending; https://github.com/KyleAMathews/element-resize-event/issues/2
+    if (removeResizeListener) {
+      removeResizeListener(this.refs.container, this._resizedContainer);
+    }
+
+    // Remove the map instance through the API
     if (this._map) {
       this._map.remove();
+      this._map = null;
     }
   }
 
@@ -143,6 +156,12 @@ class Map extends React.Component {
       [e.point.x + boxSize, e.point.y + boxSize],
     ];
     this._simpleQuery(bbox, this.props.onClickFeatures);
+  }
+
+  _resizedContainer() {
+    if (!this.props.trackResizeContainerDisabled && this._map) {
+      this._map.resize();
+    }
   }
 
   _simpleHover(e) {
@@ -195,6 +214,15 @@ class Map extends React.Component {
       });
     });
     this._map.on('moveend', () => {
+      // Attempt to keep world within normal legal lng values
+      // https://github.com/mapbox/mapbox-gl-js/issues/2071
+      if (this.props.worldCopyJumpDisabled !== true) {
+        const center = this._map.getCenter();
+        const wrap = center.wrap();
+        if (center.lng !== wrap.lng) {
+          this._map.setCenter(wrap);
+        }
+      }
       this.setState({
         startMoveLngLat: null,
         startBearing: null,
@@ -350,6 +378,8 @@ Map.propTypes = {
   doubleClickZoomDisabled: React.PropTypes.bool,
   touchZoomRotateDisabled: React.PropTypes.bool,
   trackResizeDisabled: React.PropTypes.bool,
+  trackResizeContainerDisabled: React.PropTypes.bool,
+  worldCopyJumpDisabled: React.PropTypes.bool,
 
   // Convenience implementations
   onChangeViewport: React.PropTypes.func,
@@ -397,12 +427,14 @@ Map.defaultProps = {
   keyboardDisabled: false,
   doubleClickZoomDisabled: false,
   touchZoomRotateDisabled: false,
+  trackResizeContainerDisabled: true,
   trackResizeDisabled: false,
   hashDisabled: true,
   interactiveDisabled: false,
   attributionControlDisabled: false,
   failIfMajorPerformanceCaveatDisabled: false,
   preserveDrawingBufferDisabled: true,
+  worldCopyJumpDisabled: true,
 
   bearingSnap: 7,
   mapClasses: [],

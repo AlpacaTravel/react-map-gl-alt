@@ -140,6 +140,12 @@ props;
 * bearingSnap (default 7)
 * mapClasses (default [])
 
+There are also some enhanced behaviours to assist.
+
+* worldCopyJumpDisabled (default true)
+* trackResizeContainerDisabled (default true)
+
+
 ## The Map Facade
 
 To reduce the state managed outside of this component, the component offers a
@@ -427,6 +433,22 @@ through the ```onChangeViewport``` method.
 * center (new)
 * zoom
 * map (new - access to the map facade and transform/cloneTransform)
+
+### worldCopyJumpDisabled (Experimental - default false)
+
+When enabled, the map tracks the pan to another copy of the world and resets
+the center. This is to assist emulating the behaviour of Leaflet
+world copy jump behaviour. This behaviour will reset the center to the wrapped
+center after the end of a move behaviour.
+
+This can help the projection of your overlays (popups and custom markers etc)
+that typically have problems projecting with illegal lng/lat values.
+
+### trackResizeContainerDisabled (Experimental - default false)
+
+When enabled, when the container is resized (opposed to the window), the map
+will have a resize() call applied. This can assist where a transition happens
+to the map component and it is important to call resize().
 
 # Testing
 

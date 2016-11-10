@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/AlpacaTravel/react-map-gl-alt#readme",
   "dependencies": {
+    "element-resize-event": "^2.0.7",
     "mapbox-gl": "^0.26.0",
     "mapbox-gl-style-spec": "^8.8.1"
   },

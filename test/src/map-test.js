@@ -49,9 +49,10 @@ describe('Map component', () => {
   describe('while unmounting', () => {
     const component = factoryMountedComponent(simpleDefaultProps);
     sinon.spy(component.node._map, 'remove');
+    const remove = component.node._map.remove;
     component.node.componentWillUnmount();
     it('will call map remove on unmount', () => {
-      expect(component.node._map.remove.calledOnce).to.equal(true);
+      expect(remove.calledOnce).to.equal(true);
     });
   });
   describe('while receiving props', () => {
@@ -433,41 +434,84 @@ describe('Map component', () => {
     });
   });
   describe('when updating a map style', () => {
-    const component = factoryMountedComponent(simpleDefaultProps);
-    const result = new Promise(fulfill => {
-      const nextProps = {
-        ...simpleDefaultProps,
-        center: null,
-        longitude: 12,
-        latitude: 13,
-        mapStyle: Immutable.fromJS({
-          ...simpleDefaultProps.mapStyle.toJS(),
-          layers: [
-            {
-              id: 'background',
-              type: 'background',
-              interactive: true,
-              paint: {
-                'background-color': '#dedede',
+    it('will apply changes', (done) => {
+      const component = factoryMountedComponent(simpleDefaultProps);
+      component.node._map.on('load', () => {
+        const nextProps = {
+          ...simpleDefaultProps,
+          center: null,
+          longitude: 12,
+          latitude: 13,
+          mapStyle: Immutable.fromJS({
+            ...simpleDefaultProps.mapStyle.toJS(),
+            layers: [
+              {
+                id: 'background',
+                type: 'background',
+                interactive: true,
+                paint: {
+                  'background-color': '#dedede',
+                },
               },
-            },
-          ],
-        }),
-        move: (target) => ({
-          command: 'jumpTo',
-          args: [target],
-        }),
-      };
-      sinon.spy(component.node._map, 'setStyle');
-      sinon.spy(component.node, '_updateStyle');
-      component.setProps(nextProps);
-      fulfill();
-    });
-    it('will setStyle', () => {
-      result.then(() => {
+            ],
+          }),
+          move: (target) => ({
+            command: 'jumpTo',
+            args: [target],
+          }),
+        };
+        sinon.spy(component.node._map, 'addLayer');
+        sinon.spy(component.node, '_updateStyle');
+        component.setProps(nextProps);
         expect(component.node._updateStyle.calledOnce).to.equal(true);
-        expect(component.node._map.setStyle.calledOnce).to.equal(true);
+        expect(component.node._map.addLayer.calledOnce).to.equal(true);
+        done();
       });
     });
   });
+  describe('worldCopyJump behaviour', () => {
+    it('will reset center', (done) => {
+      const props = {
+        ...simpleDefaultProps,
+        worldCopyJumpDisabled: false,
+      };
+      const component = factoryMountedComponent(props);
+      component.node._map.on('load', () => {
+        const nextProps = {
+          ...props,
+          center: null,
+          longitude: 220,
+          latitude: 13,
+          move: (target) => ({
+            command: 'jumpTo',
+            args: [target],
+          }),
+        };
+        component.setProps(nextProps);
+        const center = component.node._mapFacade.getCenter();
+        expect(center.lng).to.equal(-140);
+        done();
+      });
+    });
+  });
+
+  // TODO: Need to have a container resizing test.. something similar to below..
+  // describe('container resizing', () => {
+  //   describe('with default trackResizeContainerDisabled props', () => {
+  //     it('will call map resize when container event fired', () => {
+  //       const props = {
+  //         ...simpleDefaultProps,
+  //         style: {
+  //           width: 100,
+  //         },
+  //       };
+  //       const component = factoryMountedComponent(props);
+  //       sinon.spy(component.node._map, 'resize');
+  //       const event = document.createEvent('Event');
+  //       event.initEvent('onresize', true, true);
+  //       component.node.refs.container.__resizeTrigger__.dispatchEvent(event);
+  //       expect(component.node._map.resize.calledOnce).to.equal(true);
+  //     });
+  //   });
+  // });
 });
