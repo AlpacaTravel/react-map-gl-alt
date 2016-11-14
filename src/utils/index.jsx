@@ -1,8 +1,9 @@
-import * as _ from 'lodash';
+import _has from 'lodash.has';
+import _isEqual from 'lodash.isequal';
 import mapboxgl from 'mapbox-gl';
 
-export const isEqual = (prop1, prop2) => (_.isEqual(prop1, prop2));
-export const has = (obj, key) => (_.has(obj, key));
+export const isEqual = (prop1, prop2) => (_isEqual(prop1, prop2));
+export const has = (obj, key) => (_has(obj, key));
 
 export const diff = (prop, obj1, obj2) => {
   const obj1HasProp = has(obj1, prop);

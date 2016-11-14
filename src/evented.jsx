@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 export default class Evented {
   constructor(map, mapAccessor) {
     this._map = map;
