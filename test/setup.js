@@ -32,3 +32,15 @@ global.navigator = {
 
 global.document.execCommand = () => {};
 global.window.addResizeListener = () => {};
+
+// This is a hacked up version of "flow-remove-types/register" which allows
+// us to include "mapbox-gl" directly.
+
+const Module = require('module');
+const removeTypes = require('flow-remove-types');
+
+const _compileSuper = Module.prototype._compile;
+Module.prototype._compile = function _compile(source, filename) {
+  const transformedSource = filename.indexOf('node_modules/mapbox-gl') !== -1 ? removeTypes(source) : source;
+  _compileSuper.call(this, transformedSource, filename);
+};
