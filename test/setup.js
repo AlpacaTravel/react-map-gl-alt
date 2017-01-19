@@ -41,6 +41,10 @@ const removeTypes = require('flow-remove-types');
 
 const _compileSuper = Module.prototype._compile;
 Module.prototype._compile = function _compile(source, filename) {
-  const transformedSource = filename.indexOf('node_modules/mapbox-gl') !== -1 ? removeTypes(source) : source;
-  _compileSuper.call(this, transformedSource, filename);
+  const transformedSource = filename.indexOf('node_modules/mapbox-gl/') !== -1 ? removeTypes(source) : source;
+  if (!transformedSource.replace && transformedSource.toString) {
+    _compileSuper.call(this, transformedSource.toString(), filename);
+  } else {
+    _compileSuper.call(this, transformedSource, filename);
+  }
 };
