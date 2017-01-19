@@ -18,6 +18,8 @@ export const cloneTransform = (transform) => {
   clonedTransform._altitude = transform.altitude;
   clonedTransform._pitch = transform.pitch;
   clonedTransform._unmodified = transform._unmodified;
+  clonedTransform._renderWorldCopies = transform._renderWorldCopies;
+  clonedTransform._fov = transform._fov;
   // Last modifier calls calculatePosMatrix
   clonedTransform.zoom = transform.zoom;
   return clonedTransform;
