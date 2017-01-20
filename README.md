@@ -13,7 +13,8 @@ based vector tile mapping library.
 ## Overview
 
 This project looks at improved programmatic bindings to the API, motion control,
-and style management (such as Redux controlled state opposed to React or style URLs).
+event handling and style management (such as Redux controlled state opposed to
+  React or style URLs).
 
 At a basic level, this library provides your React project with beautiful WebGL
 maps that can be used for data visualiations and improved interactivity.
