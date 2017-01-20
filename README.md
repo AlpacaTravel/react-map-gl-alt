@@ -20,7 +20,7 @@ At a basic level, this library provides your React project with beautiful WebGL
 maps that can be used for data visualiations and improved interactivity.
 
 If you plan on creating simple maps and are new to mapbox gl js, you may find
-simpler integrations using (react-mapbox-gl)[https://github.com/alex3165/react-mapbox-gl].
+simpler integrations using [react-mapbox-gl](https://github.com/alex3165/react-mapbox-gl).
 If you require finer control of your style, API and want to leverage more of the
 API this project we think will help you.
 
