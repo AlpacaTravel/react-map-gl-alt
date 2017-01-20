@@ -10,10 +10,12 @@ based vector tile mapping library.
 [![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
 ![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
-This library improves API access and event access.
-
 ## Objectives
 
+This library provides your React project beautiful WebGL maps. These maps can
+be used to create data visualisations and improved interactivity.
+
+* Expose the mapbox API to your React application in a convenient way
 * Use the latest available mapbox-gl-js release without version locking (Done)
 * Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
 * Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
