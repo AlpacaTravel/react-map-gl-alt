@@ -42,10 +42,29 @@ npm install react-map-gl-alt --save
 ```
 
 This package works with compatible mapbox-gl-js build approaches, including
-webpack. This library supports the current 'dist' method recommended by
-mapbox-gl-js as of 0.25.0.
+webpack, browserify, etc.
 
-See [webpack example](https://github.com/AlpacaTravel/react-map-gl-alt/blob/master/example/webpack.config.js)
+#### Using Webpack
+
+You will need to set your resolve "alias" section to include the mapbox gl js
+dist file directly. Mapbox GL JS has recommended this approach since version
+0.25.0.
+
+See [webpack configuration example](https://github.com/AlpacaTravel/react-map-gl-alt/blob/master/example/webpack.config.js)
+
+### Simple Usage
+
+```jsx
+import MapGL from 'react-map-gl-alt';
+
+// Simple react component returning your webGL map
+export const MapExample = () => (
+  <MapGL
+    mapboxApiAccessToken="<your access token here>"
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+    />
+);
+```
 
 ## Running the examples
 
