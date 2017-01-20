@@ -1,7 +1,7 @@
 # react-map-gl-alt
 [![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
 [![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
-[![Dependencies](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
+[Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
 react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
@@ -23,7 +23,7 @@ This library improves API access and event access.
 * Use setData for geojson sources (Done)
 * API support for current react-map-gl MapGL wrapper props (Done)
 * Support for width/height 100%/100vh etc (Done)
-* Provide a separation for managing viewport interactions (Done)
+* Provide a separati on for managing viewport interactions (Done)
 * Support for all current Uber overlays (In Progress)
 * Provide an example controlled viewport interaction component (In Progress)
 * High Code Coverage (Done)
