@@ -1,14 +1,14 @@
-# react-map-gl-alt
+# React WebGL Maps with Mapbox GL JS
+
+*react-map-gl-alt* provides a [React](http://facebook.github.io/react/) friendly
+API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
+based vector tile mapping library.
 
 [![NPM](https://nodei.co/npm/react-map-gl-alt.png?downloads=true&downloadRank=true)](https://nodei.co/npm/react-map-gl-alt/)
 
 [![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
 [![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
 ![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
-
-react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
-API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
-based vector tile mapping library.
 
 This library improves API access and event access.
 
