@@ -10,10 +10,18 @@ based vector tile mapping library.
 [![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
 ![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
-## Objectives
+## Overview
 
-This library provides your React project beautiful WebGL maps. These maps can
-be used to create data visualisations and improved interactivity.
+This project looks at improved programmatic bindings to the API, motion control,
+and style management (such as Redux controlled state opposed to React or style URLs).
+
+At a basic level, this library provides your React project with beautiful WebGL
+maps that can be used for data visualiations and improved interactivity.
+
+If you plan on creating simple maps and are new to mapbox gl js, you may find
+simpler integrations using (react-mapbox-gl)[https://github.com/alex3165/react-mapbox-gl].
+If you require finer control of your style, API and want to leverage more of the
+API this project we think will help you.
 
 * Expose the mapbox API to your React application in a convenient way
 * Use the latest available mapbox-gl-js release without version locking (Done)
