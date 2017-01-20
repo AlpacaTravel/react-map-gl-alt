@@ -1,15 +1,30 @@
-# react-map-gl-alt
-[![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
-[![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
+# React WebGL Maps with Mapbox GL JS
 
-react-map-gl-alt provides a [React](http://facebook.github.io/react/) friendly
+*react-map-gl-alt* provides a [React](http://facebook.github.io/react/) friendly
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
 based vector tile mapping library.
 
-This library improves API access and event access.
+[![NPM](https://nodei.co/npm/react-map-gl-alt.png?downloads=true&downloadRank=true)](https://nodei.co/npm/react-map-gl-alt/)
 
-## Objectives
+[![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
+[![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
+![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
+## Overview
+
+This project looks at improved programmatic bindings to the API, motion control,
+event handling and style management (such as Redux controlled state opposed to
+  React or style URLs).
+
+At a basic level, this library provides your React project with beautiful WebGL
+maps that can be used for data visualiations and improved interactivity.
+
+If you plan on creating simple maps and are new to mapbox gl js, you may find
+simpler integrations using (react-mapbox-gl)[https://github.com/alex3165/react-mapbox-gl].
+If you require finer control of your style, API and want to leverage more of the
+API this project we think will help you.
+
+* Expose the mapbox API to your React application in a convenient way
 * Use the latest available mapbox-gl-js release without version locking (Done)
 * Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
 * Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
@@ -22,7 +37,7 @@ This library improves API access and event access.
 * Use setData for geojson sources (Done)
 * API support for current react-map-gl MapGL wrapper props (Done)
 * Support for width/height 100%/100vh etc (Done)
-* Provide a separation for managing viewport interactions (Done)
+* Provide a separati on for managing viewport interactions (Done)
 * Support for all current Uber overlays (In Progress)
 * Provide an example controlled viewport interaction component (In Progress)
 * High Code Coverage (Done)
@@ -36,10 +51,29 @@ npm install react-map-gl-alt --save
 ```
 
 This package works with compatible mapbox-gl-js build approaches, including
-webpack. This library supports the current 'dist' method recommended by
-mapbox-gl-js as of 0.25.0.
+webpack, browserify, etc.
 
-See [webpack example](https://github.com/AlpacaTravel/react-map-gl-alt/blob/master/example/webpack.config.js)
+#### Using Webpack
+
+You will need to set your resolve "alias" section to include the mapbox gl js
+dist file directly. Mapbox GL JS has recommended this approach since version
+0.25.0.
+
+See [webpack configuration example](https://github.com/AlpacaTravel/react-map-gl-alt/blob/master/example/webpack.config.js)
+
+### Simple Usage
+
+```jsx
+import MapGL from 'react-map-gl-alt';
+
+// Simple react component returning your webGL map
+export const MapExample = () => (
+  <MapGL
+    mapboxApiAccessToken="<your access token here>"
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+    />
+);
+```
 
 ## Running the examples
 
