@@ -213,14 +213,13 @@ class Map extends React.Component {
         isUserControlled: (has(event, 'originalEvent')),
       });
     });
-    this._map.on('moveend', () => {
+    this._map.on('moveend', (e) => {
       // Attempt to keep world within normal legal lng values
       // https://github.com/mapbox/mapbox-gl-js/issues/2071
       if (this.props.worldCopyJumpDisabled !== true) {
-        const center = this._map.getCenter();
-        const wrap = center.wrap();
-        if (center.lng !== wrap.lng) {
-          this._map.setCenter(wrap);
+        const map = e.target || this._map; // Use map from the event
+        if (!e.snapWorldMove && map) {
+          map.setCenter(map.getCenter().wrap(), { snapWorldMove: true });
         }
       }
       this.setState({
