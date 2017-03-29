@@ -217,7 +217,7 @@ class Map extends React.Component {
       // Attempt to keep world within normal legal lng values
       // https://github.com/mapbox/mapbox-gl-js/issues/2071
       if (this.props.worldCopyJumpDisabled !== true) {
-        const map = e.target || this._map; // Use map from the event
+        const map = this._map; // Use default map instead of map from event
         if (!e.snapWorldMove && map) {
           map.setCenter(map.getCenter().wrap(), { snapWorldMove: true });
         }
