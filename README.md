@@ -5,9 +5,6 @@ API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
 based vector tile mapping library.
 
 [![NPM](https://nodei.co/npm/react-map-gl-alt.png?downloads=true&downloadRank=true)](https://nodei.co/npm/react-map-gl-alt/)
-
-[![Build Status](https://travis-ci.org/AlpacaTravel/react-map-gl-alt.svg?branch=master)](https://travis-ci.org/AlpacaTravel/react-map-gl-alt)
-[![Coverage Status](https://coveralls.io/repos/github/AlpacaTravel/react-map-gl-alt/badge.svg?branch=master)](https://coveralls.io/github/AlpacaTravel/react-map-gl-alt?branch=master)
 ![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
 ## Overview
@@ -40,7 +37,7 @@ API this project we think will help you.
 * Provide a separati on for managing viewport interactions (Done)
 * Support for all current Uber overlays (In Progress)
 * Provide an example controlled viewport interaction component (In Progress)
-* High Code Coverage (Done)
+* High Code Coverage (Done - Subsequently REMOVED as requires a mock implementation of mapbox)
 
 ## Overview
 
@@ -483,13 +480,3 @@ that typically have problems projecting with illegal lng/lat values.
 When enabled, when the container is resized (opposed to the window), the map
 will have a resize() call applied. This can assist where a transition happens
 to the map component and it is important to call resize().
-
-# Testing
-
-You can run tests via standard NPM test. Ensure that you have installed the
-devDependencies.
-
-```
-npm install -silent
-npm test
-```

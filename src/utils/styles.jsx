@@ -1,5 +1,5 @@
 import Immutable, { Map } from 'immutable';
-import { diff as diffStyles } from 'mapbox-gl-style-spec';
+import { default as diffStyles } from '@mapbox/mapbox-gl-style-spec/diff';
 import { isEqual, has } from './index';
 
 export const getInteractiveLayerIds = (mapStyle) => {
