@@ -51,27 +51,16 @@ export const areGeoJSONSourcePropertiesSimilar = (source, newSource) => {
 };
 
 export const processStyleChanges = (map, changes, nextMapStyle) => {
-  const skipAddSources = [];
   changes.forEach((change) => {
     const targetSource = change.args[0];
 
-    // Bypass certain commands (e.g. where we are reusing sources)
-    if (skipAddSources.length && change.command === 'addSource') {
-      if (skipAddSources.indexOf(targetSource) > -1) {
-        return;
-      }
-    }
-
     // Check if we are just updating the data
-    if (change.command === 'removeSource') {
+    if (change.command === 'setGeoJSONSourceData') {
       if (nextMapStyle.sources && nextMapStyle.sources[targetSource]) {
-        const newSource = nextMapStyle.sources[targetSource];
-        const oldSource = map.getSource(targetSource);
-        if (areGeoJSONSourcePropertiesSimilar(oldSource, newSource)) {
-          oldSource.setData(newSource.data);
-          skipAddSources.push(targetSource); // Don't re-add
-          return;
-        }
+        const source = map.getSource(targetSource);
+        const data = change.args[1];
+        source.setData(data);
+        return;
       }
     }
 
