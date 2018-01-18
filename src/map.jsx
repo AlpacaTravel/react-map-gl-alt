@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import Immutable from 'immutable';
 import { default as addResizeListener, unbind as removeResizeListener } from 'element-resize-event';
@@ -65,7 +66,7 @@ class Map extends React.Component {
 
     // Optionally use longitude/latitude without a center present
     const options = {
-      container: this.refs.container,
+      container: this.container,
       style: mapStyle,
       hash: !this.props.hashDisabled,
       interactive: !this.props.interactiveDisabled,
@@ -101,7 +102,7 @@ class Map extends React.Component {
     this._listenStateEvents();
 
     // Add in event listeners for the container
-    addResizeListener(this.refs.container, this._resizedContainer);
+    addResizeListener(this.container, this._resizedContainer);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,7 +116,7 @@ class Map extends React.Component {
     // Remove in event listeners for the container
     // Pending; https://github.com/KyleAMathews/element-resize-event/issues/2
     if (removeResizeListener) {
-      removeResizeListener(this.refs.container, this._resizedContainer);
+      removeResizeListener(this.container, this._resizedContainer);
     }
 
     // Remove the map instance through the API
@@ -343,7 +344,7 @@ class Map extends React.Component {
   render() {
     return (
       <div
-        ref="container"
+        ref={container => { this.container = container; }}
         className="map"
         style={this.props.style}
       >
@@ -354,66 +355,66 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
-  style: React.PropTypes.object,
+  style: PropTypes.object,
 
   // Mapbox access token
-  mapboxApiAccessToken: React.PropTypes.string,
+  mapboxApiAccessToken: PropTypes.string,
 
   // Main style
-  mapStyle: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.instanceOf(Immutable.Map),
+  mapStyle: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Immutable.Map),
   ]).isRequired,
 
   // Move control actions
-  move: React.PropTypes.func,
+  move: PropTypes.func,
 
   // Control Interactions
-  scrollZoomDisabled: React.PropTypes.bool,
-  boxZoomDisabled: React.PropTypes.bool,
-  dragPanDisabled: React.PropTypes.bool,
-  dragRotateDisabled: React.PropTypes.bool,
-  keyboardDisabled: React.PropTypes.bool,
-  doubleClickZoomDisabled: React.PropTypes.bool,
-  touchZoomRotateDisabled: React.PropTypes.bool,
-  trackResizeDisabled: React.PropTypes.bool,
-  trackResizeContainerDisabled: React.PropTypes.bool,
-  worldCopyJumpDisabled: React.PropTypes.bool,
+  scrollZoomDisabled: PropTypes.bool,
+  boxZoomDisabled: PropTypes.bool,
+  dragPanDisabled: PropTypes.bool,
+  dragRotateDisabled: PropTypes.bool,
+  keyboardDisabled: PropTypes.bool,
+  doubleClickZoomDisabled: PropTypes.bool,
+  touchZoomRotateDisabled: PropTypes.bool,
+  trackResizeDisabled: PropTypes.bool,
+  trackResizeContainerDisabled: PropTypes.bool,
+  worldCopyJumpDisabled: PropTypes.bool,
 
   // Convenience implementations
-  onChangeViewport: React.PropTypes.func,
-  onHoverFeatures: React.PropTypes.func,
-  ignoreEmptyFeatures: React.PropTypes.bool,
-  onClickFeatures: React.PropTypes.func,
-  clickRadius: React.PropTypes.number,
-  longitude: React.PropTypes.number,
-  latitude: React.PropTypes.number,
+  onChangeViewport: PropTypes.func,
+  onHoverFeatures: PropTypes.func,
+  ignoreEmptyFeatures: PropTypes.bool,
+  onClickFeatures: PropTypes.func,
+  clickRadius: PropTypes.number,
+  longitude: PropTypes.number,
+  latitude: PropTypes.number,
 
   // Target controls
-  center: React.PropTypes.oneOfType([
-    React.PropTypes.arrayOf(React.PropTypes.number),
-    React.PropTypes.instanceOf(mapboxgl.LngLat),
+  center: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.number),
+    PropTypes.instanceOf(mapboxgl.LngLat),
   ]),
-  zoom: React.PropTypes.number,
-  // altitude: React.PropTypes.number,
-  bearing: React.PropTypes.number,
-  pitch: React.PropTypes.number,
-  bounds: React.PropTypes.oneOfType([
-    React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.number)),
-    React.PropTypes.instanceOf(mapboxgl.LngLatBounds),
+  zoom: PropTypes.number,
+  // altitude: PropTypes.number,
+  bearing: PropTypes.number,
+  pitch: PropTypes.number,
+  bounds: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+    PropTypes.instanceOf(mapboxgl.LngLatBounds),
   ]),
 
-  minZoom: React.PropTypes.number,
-  maxZoom: React.PropTypes.number,
-  maxBounds: React.PropTypes.object,
-  hashDisabled: React.PropTypes.bool,
-  interactiveDisabled: React.PropTypes.bool,
-  bearingSnap: React.PropTypes.number,
-  mapClasses: React.PropTypes.arrayOf(React.PropTypes.string),
-  attributionControlDisabled: React.PropTypes.bool,
-  failIfMajorPerformanceCaveatDisabled: React.PropTypes.bool,
-  preserveDrawingBufferDisabled: React.PropTypes.bool,
-  children: React.PropTypes.any,
+  minZoom: PropTypes.number,
+  maxZoom: PropTypes.number,
+  maxBounds: PropTypes.object,
+  hashDisabled: PropTypes.bool,
+  interactiveDisabled: PropTypes.bool,
+  bearingSnap: PropTypes.number,
+  mapClasses: PropTypes.arrayOf(PropTypes.string),
+  attributionControlDisabled: PropTypes.bool,
+  failIfMajorPerformanceCaveatDisabled: PropTypes.bool,
+  preserveDrawingBufferDisabled: PropTypes.bool,
+  children: PropTypes.any,
 };
 
 Map.defaultProps = {
@@ -451,11 +452,11 @@ Map.defaultProps = {
 };
 
 Map.childContextTypes = {
-  map: React.PropTypes.object,
+  map: PropTypes.object,
 };
 
 Map.contextTypes = {
-  mapboxApiAccessToken: React.PropTypes.string,
+  mapboxApiAccessToken: PropTypes.string,
 };
 
 export default Map;

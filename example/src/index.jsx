@@ -70,6 +70,7 @@ class Example extends React.Component {
           mapboxApiAccessToken={mapboxApiAccessToken}
           mapStyle="mapbox://styles/mapbox/streets-v9"
           {...this.state.target}
+          failIfMajorPerformanceCaveatDisabled
           onChangeViewport={this._onChangeViewport}
           style={{ display: 'flex', flex: 1 }}
           move={this.state.motion}

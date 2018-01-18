@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { diff } from './utils';
 
 class MapEvents extends React.Component {
@@ -72,56 +73,56 @@ class MapEvents extends React.Component {
 
 MapEvents.propTypes = {
   // Map events
-  onStyleLoad: React.PropTypes.func,
-  onResize: React.PropTypes.func,
-  onWebGLContextLost: React.PropTypes.func,
-  onWebGLContextRestored: React.PropTypes.func,
-  onRemove: React.PropTypes.func,
-  onDataLoading: React.PropTypes.func,
-  onRender: React.PropTypes.func,
-  onLoad: React.PropTypes.func,
-  onData: React.PropTypes.func,
-  onError: React.PropTypes.func,
+  onStyleLoad: PropTypes.func,
+  onResize: PropTypes.func,
+  onWebGLContextLost: PropTypes.func,
+  onWebGLContextRestored: PropTypes.func,
+  onRemove: PropTypes.func,
+  onDataLoading: PropTypes.func,
+  onRender: PropTypes.func,
+  onLoad: PropTypes.func,
+  onData: PropTypes.func,
+  onError: PropTypes.func,
 
   // Interactive events
-  onMouseOut: React.PropTypes.func,
-  onMouseDown: React.PropTypes.func,
-  onMouseUp: React.PropTypes.func,
-  onMouseMove: React.PropTypes.func,
+  onMouseOut: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onMouseMove: PropTypes.func,
 
-  onTouchStart: React.PropTypes.func,
-  onTouchEnd: React.PropTypes.func,
-  onTouchMove: React.PropTypes.func,
-  onTouchCancel: React.PropTypes.func,
+  onTouchStart: PropTypes.func,
+  onTouchEnd: PropTypes.func,
+  onTouchMove: PropTypes.func,
+  onTouchCancel: PropTypes.func,
 
-  onClick: React.PropTypes.func,
-  onDblClick: React.PropTypes.func,
-  onContextMenu: React.PropTypes.func,
+  onClick: PropTypes.func,
+  onDblClick: PropTypes.func,
+  onContextMenu: PropTypes.func,
 
-  onMoveStart: React.PropTypes.func,
-  onMove: React.PropTypes.func,
-  onMoveEnd: React.PropTypes.func,
+  onMoveStart: PropTypes.func,
+  onMove: PropTypes.func,
+  onMoveEnd: PropTypes.func,
 
-  onZoomStart: React.PropTypes.func,
-  onZoomEnd: React.PropTypes.func,
-  onZoom: React.PropTypes.func,
+  onZoomStart: PropTypes.func,
+  onZoomEnd: PropTypes.func,
+  onZoom: PropTypes.func,
 
-  onBoxZoomCancel: React.PropTypes.func,
-  onBoxZoomEnd: React.PropTypes.func,
-  onBoxZoomStart: React.PropTypes.func,
+  onBoxZoomCancel: PropTypes.func,
+  onBoxZoomEnd: PropTypes.func,
+  onBoxZoomStart: PropTypes.func,
 
-  onRotateStart: React.PropTypes.func,
-  onRotateEnd: React.PropTypes.func,
+  onRotateStart: PropTypes.func,
+  onRotateEnd: PropTypes.func,
 
-  onDragStart: React.PropTypes.func,
-  onDragEnd: React.PropTypes.func,
-  onDrag: React.PropTypes.func,
+  onDragStart: PropTypes.func,
+  onDragEnd: PropTypes.func,
+  onDrag: PropTypes.func,
 
-  onPitch: React.PropTypes.func,
+  onPitch: PropTypes.func,
 };
 
 MapEvents.contextTypes = {
-  map: React.PropTypes.object.isRequired,
+  map: PropTypes.object.isRequired,
 };
 
 export default MapEvents;
