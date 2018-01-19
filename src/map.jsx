@@ -363,6 +363,7 @@ Map.propTypes = {
   // Main style
   mapStyle: PropTypes.oneOfType([
     PropTypes.string,
+    PropTypes.object,
     PropTypes.instanceOf(Immutable.Map),
   ]).isRequired,
 
@@ -401,6 +402,7 @@ Map.propTypes = {
   pitch: PropTypes.number,
   bounds: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+    PropTypes.arrayOf(PropTypes.number),
     PropTypes.instanceOf(mapboxgl.LngLatBounds),
   ]),
 
