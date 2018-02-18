@@ -106,10 +106,13 @@ class Map extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this._updateMapViewport(this.props, nextProps);
     this._updateConvenienceHandlers(this.props, nextProps);
     this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
     this._updateMapOptions(this.props, nextProps);
+  }
+
+  componentDidUpdate(prevProps) {
+    this._updateMapViewport(prevProps, this.props);
   }
 
   componentWillUnmount() {
