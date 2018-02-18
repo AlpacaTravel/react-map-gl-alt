@@ -10,7 +10,7 @@ import { updateOptions as updateMapOptions, performMoveAction } from './utils/ma
 import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
 
 const defaultMoveAction = (target) => ({ command: 'flyTo', args: [target] });
-const defaultFitBoundsAction = (target) => ({ command: 'fitBounds', args: [target.bounds, { animate: false }] });
+const defaultFitBoundsAction = (target) => ({ command: 'fitBounds', args: [target.bounds, { animate: false, duration: 100 }] });
 
 class Map extends React.Component {
   static supported() {
@@ -109,10 +109,7 @@ class Map extends React.Component {
     this._updateConvenienceHandlers(this.props, nextProps);
     this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
     this._updateMapOptions(this.props, nextProps);
-  }
-
-  componentDidUpdate(prevProps) {
-    this._updateMapViewport(prevProps, this.props);
+    this._updateMapViewport(this.props, nextProps);
   }
 
   componentWillUnmount() {
@@ -165,6 +162,9 @@ class Map extends React.Component {
   _resizedContainer() {
     if (!this.props.trackResizeContainerDisabled && this._map) {
       this._map.resize();
+      if (!this.props.forceResizeContainerViewportDisabled && this._map) {
+        this._updateMapViewport(this.props, { ...this.props, timestamp: Date.now() });
+      }
     }
   }
 
@@ -317,7 +317,8 @@ class Map extends React.Component {
       diff('zoom', prior, next) ||
       // diff('altitude', this.props, nextProps) ||
       diff('bearing', prior, next) ||
-      diff('pitch', prior, next)
+      diff('pitch', prior, next) ||
+      diff('timestamp', prior, next)
     );
 
     if (viewportChanged) {
@@ -384,6 +385,7 @@ Map.propTypes = {
   trackResizeDisabled: PropTypes.bool,
   trackResizeContainerDisabled: PropTypes.bool,
   worldCopyJumpDisabled: PropTypes.bool,
+  forceResizeContainerViewportDisabled: PropTypes.bool,
 
   // Convenience implementations
   onChangeViewport: PropTypes.func,
@@ -440,6 +442,7 @@ Map.defaultProps = {
   failIfMajorPerformanceCaveatDisabled: false,
   preserveDrawingBufferDisabled: true,
   worldCopyJumpDisabled: true,
+  forceResizeContainerViewportDisabled: false,
 
   bearingSnap: 7,
   mapClasses: [],

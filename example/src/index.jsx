@@ -15,6 +15,11 @@ const flyTo = (target) => ({
   }],
 });
 
+const fitBounds = (target) => ({
+  command: 'fitBounds',
+  args: [target.bounds, { duration: 0 }]
+});
+
 const resetNorth = (target) => ({
   command: 'resetNorth',
   args: [{
@@ -36,6 +41,7 @@ class Example extends React.Component {
         zoom: 5,
       },
       motion: flyTo,
+      flex: 1,
     };
 
     this._onClick = this._onClick.bind(this);
@@ -65,6 +71,12 @@ class Example extends React.Component {
           <button onClick={() => this.setState({ target: { ...this.state.viewport, bearing: 0, pitch: 0 }, motion: resetNorth })}>
             Reset North
           </button>
+          <button onClick={() => this.setState({ target: { bounds: [10, 10, 20, 20] }, motion: fitBounds })}>
+            Bounds
+          </button>
+          <button onClick={() => this.setState({ flex: this.state.flex === 1 ? 0.5 : 1 })}>
+            Flex
+          </button>
         </div>
         <MapGL
           mapboxApiAccessToken={mapboxApiAccessToken}
@@ -72,9 +84,10 @@ class Example extends React.Component {
           {...this.state.target}
           failIfMajorPerformanceCaveatDisabled
           onChangeViewport={this._onChangeViewport}
-          style={{ display: 'flex', flex: 1 }}
+          style={{ display: 'flex', flex: this.state.flex }}
           move={this.state.motion}
           worldCopyJumpDisabled={false}
+          trackResizeContainerDisabled={false}
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}
