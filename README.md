@@ -175,6 +175,7 @@ There are also some enhanced behaviours to assist.
 
 * worldCopyJumpDisabled (default true)
 * trackResizeContainerDisabled (default true)
+* crossSourceCollisionsDisabled (default false)
 
 
 ## The Map Facade
@@ -480,3 +481,9 @@ that typically have problems projecting with illegal lng/lat values.
 When enabled, when the container is resized (opposed to the window), the map
 will have a resize() call applied. This can assist where a transition happens
 to the map component and it is important to call resize().
+
+### crossSourceCollisionsDisabled (default false)
+
+With the introduction of 0.46.0, Mapbox GL JS support for disabling cross source
+collissions has been introduced. Apply this prop to the map to apply the map
+option.

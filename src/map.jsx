@@ -79,7 +79,10 @@ class Map extends React.Component {
       zoom: this.props.zoom,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
+      crossSourceCollisions: !this.props.crossSourceCollisionsDisabled,
     };
+
+    console.log(options);
 
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
@@ -386,6 +389,7 @@ Map.propTypes = {
   trackResizeContainerDisabled: PropTypes.bool,
   worldCopyJumpDisabled: PropTypes.bool,
   forceResizeContainerViewportDisabled: PropTypes.bool,
+  crossSourceCollisionsDisabled: PropTypes.bool,
 
   // Convenience implementations
   onChangeViewport: PropTypes.func,
@@ -443,6 +447,7 @@ Map.defaultProps = {
   preserveDrawingBufferDisabled: true,
   worldCopyJumpDisabled: true,
   forceResizeContainerViewportDisabled: false,
+  crossSourceCollisionsDisabled: false,
 
   bearingSnap: 7,
   mapClasses: [],
