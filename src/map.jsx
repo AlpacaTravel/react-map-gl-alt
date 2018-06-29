@@ -37,6 +37,7 @@ class Map extends React.Component {
       startPitch: null,
       startZoom: null,
       userControlled: false,
+      featureStates: null,
     };
 
     const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
@@ -82,8 +83,6 @@ class Map extends React.Component {
       crossSourceCollisions: !this.props.crossSourceCollisionsDisabled,
     };
 
-    console.log(options);
-
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
@@ -100,6 +99,7 @@ class Map extends React.Component {
     // Initial actions
     this._updateConvenienceHandlers({}, this.props);
     this._updateMapOptions({}, this.props);
+    this._updateFeatureState({}, this.props);
 
     // Listen to some of the dispatched events
     this._listenStateEvents();
@@ -113,6 +113,7 @@ class Map extends React.Component {
     this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
     this._updateMapOptions(this.props, nextProps);
     this._updateMapViewport(this.props, nextProps);
+    this._updateFeatureState(this.props, nextProps);
   }
 
   componentWillUnmount() {
@@ -276,6 +277,34 @@ class Map extends React.Component {
     updateMapOptions(this._map, previous, next);
   }
 
+  _updateFeatureState(prevProps, nextProps) {
+    if (diff('featureStates', prevProps, nextProps)) {
+      // Transform the function from [{ feature, state }] to { [feature]: { feature, state } }
+      const featureStates = fs => fs && Array.isArray(fs) && fs.reduce((c, t) =>
+        Object.assign({}, c, { [`${t.feature.source}:${t.feature.sourceLayer || ''}:${t.feature.id}`]: t }), {}) || {};
+
+      // Reset existin
+      const current = this.state.featureStates;
+      const next = featureStates(nextProps.featureStates);
+      if (current) {
+        // Any non-matching states can be reset
+        Object.keys(current).filter(key => !next[key])
+          .forEach((key) => {
+            // https://github.com/mapbox/mapbox-gl-js/issues/6889
+            const blankState = Object.keys(current[key].state).reduce((c, t) => Object.assign({}, c, { [t]: null }), {});
+            this._map.setFeatureState(current[key].feature, blankState);
+          });
+      }
+
+      // Any non-matching states can be reset
+      Object.keys(next)
+        .forEach((key) => this._map.setFeatureState(next[key].feature, next[key].state));
+
+      // Hold the feature state
+      this.setState({ featureStates: next });
+    }
+  }
+
   _updateConvenienceHandlers(prevProps, nextProps) {
     if (diff('onClickFeatures', prevProps, nextProps)) {
       if (nextProps.onClickFeatures) {
@@ -426,6 +455,8 @@ Map.propTypes = {
   failIfMajorPerformanceCaveatDisabled: PropTypes.bool,
   preserveDrawingBufferDisabled: PropTypes.bool,
   children: PropTypes.any,
+
+  featureStates: PropTypes.arrayOf(PropTypes.object),
 };
 
 Map.defaultProps = {
@@ -448,6 +479,8 @@ Map.defaultProps = {
   worldCopyJumpDisabled: true,
   forceResizeContainerViewportDisabled: false,
   crossSourceCollisionsDisabled: false,
+
+  featureStates: [],
 
   bearingSnap: 7,
   mapClasses: [],

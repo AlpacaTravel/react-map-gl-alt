@@ -42,6 +42,7 @@ class Example extends React.Component {
       },
       motion: flyTo,
       flex: 1,
+      featureStates: [],
     };
 
     this._onClick = this._onClick.bind(this);
@@ -77,6 +78,15 @@ class Example extends React.Component {
           <button onClick={() => this.setState({ flex: this.state.flex === 1 ? 0.5 : 1 })}>
             Flex
           </button>
+          <button onClick={() => this.setState({ featureStates: [{ feature: { source: 'composite', sourceLayer: 'water', id: 0 }, state: { example: 'applied' } }] })}>
+            Feature State #1
+          </button>
+          <button onClick={() => this.setState({ featureStates: [{ feature: { source: 'composite', sourceLayer: 'water', id: 0 }, state: { example: 'updated' } }] })}>
+            Feature State #2
+          </button>
+          <button onClick={() => this.setState({ featureStates: [] })}>
+            Feature State Removed
+          </button>
         </div>
         <MapGL
           mapboxApiAccessToken={mapboxApiAccessToken}
@@ -88,6 +98,7 @@ class Example extends React.Component {
           move={this.state.motion}
           worldCopyJumpDisabled={false}
           trackResizeContainerDisabled={false}
+          featureStates={this.state.featureStates}
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}

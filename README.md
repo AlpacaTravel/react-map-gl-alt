@@ -487,3 +487,20 @@ to the map component and it is important to call resize().
 With the introduction of 0.46.0, Mapbox GL JS support for disabling cross source
 collissions has been introduced. Apply this prop to the map to apply the map
 option.
+
+### featureState (experimental)
+
+You can pass the prop of featureState with an array of feature states.
+
+```
+// References to the feature state
+const feature = { source: 'mySource', sourceLayer: 'default', id: '123' };
+const state = { selected: true };
+
+const featureState = [
+  { feature, state }
+];
+
+// Apply to the prop featureState
+
+```
