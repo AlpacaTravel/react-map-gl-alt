@@ -100,6 +100,7 @@ class Example extends React.Component {
           trackResizeContainerDisabled={false}
           featureStates={this.state.featureStates}
           logoPosition="bottom-right"
+          customAttribution="Alpaca Travel"
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}

@@ -497,10 +497,10 @@ You can pass the prop of featureState with an array of feature states.
 const feature = { source: 'mySource', sourceLayer: 'default', id: '123' };
 const state = { selected: true };
 
-const featureState = [
+const featureStates = [
   { feature, state }
 ];
 
-// Apply to the prop featureState
+// Apply to the prop featureStates
 
 ```
