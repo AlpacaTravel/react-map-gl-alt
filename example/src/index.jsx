@@ -99,6 +99,7 @@ class Example extends React.Component {
           worldCopyJumpDisabled={false}
           trackResizeContainerDisabled={false}
           featureStates={this.state.featureStates}
+          logoPosition="bottom-right"
         >
           <MapEvents
             onLoad={() => { this.setState({ loaded: true }); }}
