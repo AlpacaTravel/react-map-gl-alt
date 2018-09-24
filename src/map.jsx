@@ -83,6 +83,7 @@ class Map extends React.Component {
       crossSourceCollisions: !this.props.crossSourceCollisionsDisabled,
       logoPosition: this.props.logoPosition,
       pitchWithRotate: this.props.pitchWithRotate,
+      clickTolerance: this.props.clickTolerance,
     };
 
     // Create the map and configure the map options
@@ -455,6 +456,8 @@ Map.propTypes = {
   mapClasses: PropTypes.arrayOf(PropTypes.string),
   logoPosition: PropTypes.string,
   pitchWithRotate: PropTypes.bool,
+  clickTolerance: PropTypes.number,
+
   attributionControlDisabled: PropTypes.bool,
   failIfMajorPerformanceCaveatDisabled: PropTypes.bool,
   preserveDrawingBufferDisabled: PropTypes.bool,
@@ -485,6 +488,7 @@ Map.defaultProps = {
   crossSourceCollisionsDisabled: false,
   logoPosition: 'bottom-left',
   pitchWithRotate: true,
+  clickTolerance: 3,
 
   featureStates: [],
 
