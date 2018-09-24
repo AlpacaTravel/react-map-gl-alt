@@ -24,24 +24,6 @@ simpler integrations using [react-mapbox-gl](https://github.com/alex3165/react-m
 If you require finer control of your style, API and want to leverage more of the
 API this project we think will help you.
 
-* Expose the mapbox API to your React application in a convenient way
-* Use the latest available mapbox-gl-js release without version locking (Done)
-* Expose access to all mapbox-gl-js events (safely with a readonly map accessor) (Done)
-* Provide <MapEvents onLoad={...} onMove={...} /> exposing all mapbox events (Done)
-* Allow safe access to use queryRenderedFeatures etc. (Done)
-* Provide a mechanism to support all mapbox-gl-js camera/animation controls (Done)
-* Use standard interactions (support for touch, scroll zoom etc) (Done)
-* Expose ability to turn on/off handlers (e.g. BoxZoom, ScrollZoom, DoubleClickZoom) (Done)
-* Expose project/unproject to use mapbox-gl-js mercator opposed to separate instance (Done)
-* Use Immutable and mapbox-gl-js-style-spec for diffStyles (Done)
-* Use setData for geojson sources (Done)
-* API support for current react-map-gl MapGL wrapper props (Done)
-* Support for width/height 100%/100vh etc (Done)
-* Provide a separati on for managing viewport interactions (Done)
-* Support for all current Uber overlays (In Progress)
-* Provide an example controlled viewport interaction component (In Progress)
-* High Code Coverage (Done - Subsequently REMOVED as requires a mock implementation of mapbox)
-
 ## Overview
 
 ### Installation
@@ -154,6 +136,9 @@ return (
   />
 );
 ```
+
+Note: Mapbox API does not support instantiating a map with just a bounds,
+you need to mount the component with a center and then apply your bounds.
 
 ## Map Options
 
@@ -319,9 +304,10 @@ return (
 );
 ```
 
-### Controlled animation using React Motion
+### Controlled animation
 
-Supporting stateless behaviour, this library can use React-Motion behaviour.
+Supporting stateless behaviour, this library can use React-Motion or any other
+animation prop controled easing/animation library.
 
 ```jsx
 <Motion style={{
@@ -358,142 +344,7 @@ return (
 );
 ```
 
-## Differences to react-map-gl
-
-This project interfaces similar to the react-map-gl component, but aims to
-provide some flexibilities with interactions. See the objectives of this project
-which articulate some of the major differences with this implementation to
-react-map-gl.
-
-There have been some motivations for us to warrant this extended spec. We need
-more exposure to the supported features of mapbox-gl-js, as well as want to
-leverage their optimised user interactions for smoother map behaviour.
-
-* Support for all interactions of mapbox-gl-js
-* Support for all handlers (BoxZoom, ScrollZoom, DoubleClickZoom, Keyboard etc)
-* Support the lastest mapbox-gl-js releases
-* More flexible control of animation
-* Improved mapbox API exposure with more of the API available for developers (stateless)
-* Support for all mapbox events
-* Easy access to queryRenderedFeatures etc.
-
-This project also supports the existing proptypes and convenience functions
-as react-map-gl so that developers can use their existing code and migrate
-across easily.
-
-Your visualisations and overlays will still be compatible also.
-
-### Support using react-map-gl prop helpers (onChangeViewport, onClickFeatures...)
-
-The following props expose similar behaviour to the react-map-gl library.
-
-* onChangeViewport
-* onHoverFeatures
-* onClickFeatures
-* clickRadius (default 15)
-* ignoreEmptyFeatures (default false)
-
-```jsx
-import MapGL from 'react-map-gl-alt';
-
-// ...
-
-<MapGL width={400} height={400} longitude={144.9633200} latitude={-37.8140000}
-  zoom={8} onChangeViewport={(viewport) => {
-    const { latitude, longitude, zoom } = viewport;
-    // Optionally this.setState({ viewport }); etc
-  }}
-/>
-```
-
-### Support for existing react-map-gl overlays
-
-As this library produces the viewport containing the similar props as the
-current react-map-gl spec, the existing react-map-gl overlays can be used, as
-well as the other 3rd party overlays (as well as deck.gl etc.)
-
-```jsx
-import Map from 'react-map-gl-alt';
-
-<Map {...viewport}>
-  <ScatterplotOverlay
-    {...viewport}
-    locations={locations}
-    dotRadius={4}
-    globalOpacity={1}
-    compositeInteraction="screen" />
-  // Add additional overlays etc here...
-</Map>
-```
-
-Please note; This project does not currently package the overlays included with
-the react-map-gl project.
-
-### Using ViewportMercator
-
-You can still use the ViewportMercator supplying it the width/height. As this
-library supports flex/vh and percentage based values, you can pass them in
-as below;
-
-```js
-import ViewportMercator from 'viewport-mercator-project';
-
-// Obtain the width and height accurately from the canvas drawn on screen
-const { width, height } = viewport.map.getCanvas();
-
-// Create the mercator from your captured viewport
-const originalMercator = ViewportMercator({
-  ...viewport, // Viewport obtained by onChangeViewport etc.
-  width,
-  height,
-});
-```
-
-### Extended onChangeViewport
-
-This library also exposes several new properties to the viewport state exposed
-through the ```onChangeViewport``` method.
-
-* isDragging
-* isTouching (new)
-* isMoving (new)
-* isZooming (new)
-* startDragLngLat
-* startTouchLngLat (new)
-* startMoveLngLat (new)
-* startZoomLngLat (new)
-* startPitch
-* startBearing
-* isUserControlled (new)
-* longitude
-* latitude
-* center (new)
-* zoom
-* map (new - access to the map facade and transform/cloneTransform)
-
-### worldCopyJumpDisabled (Experimental - default false)
-
-When enabled, the map tracks the pan to another copy of the world and resets
-the center. This is to assist emulating the behaviour of Leaflet
-world copy jump behaviour. This behaviour will reset the center to the wrapped
-center after the end of a move behaviour.
-
-This can help the projection of your overlays (popups and custom markers etc)
-that typically have problems projecting with illegal lng/lat values.
-
-### trackResizeContainerDisabled (Experimental - default false)
-
-When enabled, when the container is resized (opposed to the window), the map
-will have a resize() call applied. This can assist where a transition happens
-to the map component and it is important to call resize().
-
-### crossSourceCollisionsDisabled (default false)
-
-With the introduction of 0.46.0, Mapbox GL JS support for disabling cross source
-collissions has been introduced. Apply this prop to the map to apply the map
-option.
-
-### featureState
+### featureStates
 
 You can pass the prop of featureState with an array of feature states.
 
@@ -526,4 +377,25 @@ initiating the map:
 * localIdeographFontFamily (default null)
 * maxTileCacheSize (default null)
 * clickTolerance (default 3)
-*
+
+### worldCopyJumpDisabled (Experimental - default false)
+
+When enabled, the map tracks the pan to another copy of the world and resets
+the center. This is to assist emulating the behaviour of Leaflet
+world copy jump behaviour. This behaviour will reset the center to the wrapped
+center after the end of a move behaviour.
+
+This can help the projection of your overlays (popups and custom markers etc)
+that typically have problems projecting with illegal lng/lat values.
+
+### trackResizeContainerDisabled (Experimental - default false)
+
+When enabled, when the container is resized (opposed to the window), the map
+will have a resize() call applied. This can assist where a transition happens
+to the map component and it is important to call resize().
+
+### crossSourceCollisionsDisabled (default false)
+
+With the introduction of 0.46.0, Mapbox GL JS support for disabling cross source
+collissions has been introduced. Apply this prop to the map to apply the map
+option.
