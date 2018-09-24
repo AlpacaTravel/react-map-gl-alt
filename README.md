@@ -4,6 +4,9 @@
 API wrapper around [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/). A webGl
 based vector tile mapping library.
 
+This library is "bare-bones" without the kitchen-sink, for more direct API
+interactions with the mapbox API.
+
 [![NPM](https://nodei.co/npm/react-map-gl-alt.png?downloads=true&downloadRank=true)](https://nodei.co/npm/react-map-gl-alt/)
 ![Dependency Management](https://david-dm.org/AlpacaTravel/react-map-gl-alt.svg)
 
@@ -165,6 +168,7 @@ props;
 * touchZoomRotateDisabled (default false)
 * trackResizeDisabled (default false)
 * interactiveDisabled (default false)
+* pitchWithRotateDisabled (deafult false)
 * attributionControlDisabled (default false)
 * failIfMajorPerformanceCaveatDisabled (default false)
 * preserveDrawingBuffer (default true)
@@ -489,7 +493,7 @@ With the introduction of 0.46.0, Mapbox GL JS support for disabling cross source
 collissions has been introduced. Apply this prop to the map to apply the map
 option.
 
-### featureState (experimental)
+### featureState
 
 You can pass the prop of featureState with an array of feature states.
 
@@ -505,3 +509,21 @@ const featureStates = [
 // Apply to the prop featureStates
 
 ```
+
+### Controlling Attribution
+
+* attributionControlDisabled (default false)
+* logoPosition (default 'bottom-left')
+* customAttribution (default null, accepts string|array)
+
+### Additional Props for initiation of maps
+
+In addition to the API offered above, the additional props are exposed for
+initiating the map:
+
+* collectResourceTimingDisabled (default true)
+* transformRequest (default null)
+* localIdeographFontFamily (default null)
+* maxTileCacheSize (default null)
+* clickTolerance (default 3)
+*
