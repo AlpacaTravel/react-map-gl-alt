@@ -100,6 +100,9 @@ export const performMoveAction = (map, action) => {
       case 'easeTo':
         map.easeTo(...action.args);
         break;
+      case 'fitScreenCoordinates':
+        map.fitScreenCoordinates(...action.args);
+        break;
       default: break;
     }
   }

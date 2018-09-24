@@ -283,6 +283,7 @@ Animation options, as well as customise the usual Mapbox API args.
 * rotateTo
 * fitBounds
 * panTo
+* fitScreenCoordinates
 
 Other possible move control include zoomIn/zoomOut, snapToNorth, resetNorth. Be
 cautious using these as you need to anticipate their state.
