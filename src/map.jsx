@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
-import Immutable from 'immutable';
 import { default as addResizeListener, unbind as removeResizeListener } from 'element-resize-event';
 
 import MapFacade from './facades/map';
@@ -61,8 +60,8 @@ class Map extends React.Component {
 
   componentDidMount() {
     // Create the local map
-    const mapStyle = Immutable.Map.isMap(this.props.mapStyle) ?
-      this.props.mapStyle.toJS() :
+    const mapStyle = (this.props.mapStyle && this.props.mapStyle.toJS &&
+      this.props.mapStyle.toJS()) ||
       this.props.mapStyle;
 
     // Optionally use longitude/latitude without a center present
@@ -411,7 +410,6 @@ Map.propTypes = {
   mapStyle: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.instanceOf(Immutable.Map),
   ]).isRequired,
 
   // Move control actions

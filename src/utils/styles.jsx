@@ -1,14 +1,10 @@
-import Immutable, { Map } from 'immutable';
 import { default as diffStyles } from '@mapbox/mapbox-gl-style-spec/diff';
 import { isEqual, has } from './index';
 
-export const getInteractiveLayerIds = (mapStyle) => {
-  if (Map.isMap(mapStyle) && mapStyle.has('layers')) {
-    return mapStyle.get('layers')
-      .filter(l => l.get('interactive'))
-      .map(l => l.get('id'))
-      .toJS();
-  } else if (Array.isArray(mapStyle.layers)) {
+export const getInteractiveLayerIds = (style) => {
+  const mapStyle = (style.toJS && style.toJS()) || style;
+
+  if (Array.isArray(mapStyle.layers)) {
     return mapStyle.layers
       .filter(l => l.interactive)
       .map(l => l.id);
@@ -77,20 +73,13 @@ export const update = (map, mapStyle, nextMapStyle) => {
   }
 
   // If we can compare quickly
-  if (Immutable.Map.isMap(nextMapStyle) &&
-    (nextMapStyle.equals(mapStyle))) {
+  if (nextMapStyle && nextMapStyle.equals && nextMapStyle.equals(mapStyle)) {
     return;
   }
 
   // If we are dealing with immutable elements
-  let before = mapStyle;
-  let after = nextMapStyle;
-  if (Immutable.Map.isMap(mapStyle)) {
-    before = mapStyle.toJS();
-  }
-  if (Immutable.Map.isMap(nextMapStyle)) {
-    after = nextMapStyle.toJS();
-  }
+  const before = (mapStyle && mapStyle.toJS && mapStyle.toJS()) || mapStyle;
+  const after = (nextMapStyle && nextMapStyle.toJS && nextMapStyle.toJS()) || nextMapStyle;
 
   // Process the style differences
   processStyleChanges(map, diffStyles(before, after), after);
