@@ -34,7 +34,7 @@ var config = {
       loader: 'json',
     }],
     noParse: [
-      /mapbox-gl-style-spec\/migrations.+/,
+      // /mapbox-gl-style-spec\/migrations.+/,
       /jsonlint-lines.+/
     ],
   },
