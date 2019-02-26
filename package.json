@@ -36,10 +36,9 @@
     "react-dom": "^16.2.0"
   },
   "peerDependencies": {
-    "mapbox-gl": "^0.51.0"
+    "mapbox-gl": "^0.53.0"
   },
   "devDependencies": {
-    "mapbox-gl": "^0.51.0",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
@@ -56,6 +55,7 @@
     "jsdom": "^9.6.0",
     "json-loader": "^0.5.4",
     "json2mq": "^0.2.0",
+    "mapbox-gl": "^0.53.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
   }
