@@ -55,8 +55,11 @@ export const processStyleChanges = (map, changes, nextMapStyle) => {
       if (nextMapStyle.sources && nextMapStyle.sources[targetSource]) {
         const source = map.getSource(targetSource);
         const data = change.args[1];
-        source.setData(data);
-        return;
+        if (source) {
+          // Ensure we have the source before attempting to call data on it
+          source.setData(data);
+          return;
+        }
       }
     }
 
