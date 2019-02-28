@@ -28,7 +28,7 @@
   "homepage": "https://github.com/AlpacaTravel/react-map-gl-alt#readme",
   "dependencies": {
     "@mapbox/mapbox-gl-style-spec": "^10.0.0",
-    "element-resize-event": "^2.0.9",
+    "element-resize-event": "^3.0.3",
     "lodash.has": "^4.5.2",
     "lodash.isequal": "^4.5.0",
     "prop-types": "^15.6.2",

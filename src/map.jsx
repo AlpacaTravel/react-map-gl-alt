@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
-import { default as addResizeListener, unbind as removeResizeListener } from 'element-resize-event';
+import { default as elementResizedEvent, unbind as removeResizeListener } from 'element-resize-event';
 
 import MapFacade from './facades/map';
 import { diff, has, mod, lngLatArray } from './utils';
@@ -115,7 +115,7 @@ class Map extends React.Component {
     this._listenStateEvents();
 
     // Add in event listeners for the container
-    addResizeListener(this.container, this._resizedContainer);
+    elementResizedEvent(this.container, this._resizedContainer);
   }
 
   componentWillReceiveProps(nextProps) {
