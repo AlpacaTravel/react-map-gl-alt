@@ -62,8 +62,9 @@ export const processStyleChanges = (map, changes, nextMapStyle) => {
         }
       }
     }
-
-    map[change.command].apply(map, change.args);
+    if (map[change.command]) {
+      map[change.command].apply(map, change.args);
+    }
   });
 };
 
