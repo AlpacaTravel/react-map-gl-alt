@@ -463,7 +463,7 @@ Map.propTypes = {
   logoPosition: PropTypes.string,
   pitchWithRotate: PropTypes.bool,
   clickTolerance: PropTypes.number,
-  customAttribution: PropTypes.oneOf(PropTypes.string, PropTypes.array),
+  customAttribution: PropTypes.oneOf([PropTypes.string, PropTypes.array]),
   fadeDuration: PropTypes.number,
   localIdeographFontFamily: PropTypes.string,
   maxTileCacheSize: PropTypes.number,
