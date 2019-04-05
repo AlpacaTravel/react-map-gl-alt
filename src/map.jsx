@@ -84,6 +84,7 @@ class Map extends React.Component {
       zoom: this.props.zoom,
       bearing: this.props.bearing,
       pitch: this.props.pitch,
+      bounds: this.props.bounds,
       renderWorldCopies: !this.props.renderWorldCopiesDisabled,
       maxTileCacheSize: this.props.maxTileCacheSize,
       localIdeographFontFamily: this.props.localIdeographFontFamily,
@@ -96,15 +97,6 @@ class Map extends React.Component {
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
-
-    // If we have a bounds
-    if (has(this.props, 'bounds')) {
-      const next = {
-        ...this.props,
-        move: this.props.move || defaultFitBoundsAction,
-      };
-      this._updateMapViewport({}, next);
-    }
 
     // Initial actions
     this._updateConvenienceHandlers({}, this.props);
