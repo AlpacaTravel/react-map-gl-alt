@@ -85,6 +85,7 @@ class Map extends React.Component {
       bearing: this.props.bearing,
       pitch: this.props.pitch,
       bounds: this.props.bounds,
+      maxBounds: this.props.maxBounds,
       renderWorldCopies: !this.props.renderWorldCopiesDisabled,
       maxTileCacheSize: this.props.maxTileCacheSize,
       localIdeographFontFamily: this.props.localIdeographFontFamily,
