@@ -1,6 +1,6 @@
 {
   "name": "react-map-gl-alt",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "A React wrapper for Mapbox-GL-JS",
   "main": "index.js",
   "files": [
@@ -26,7 +26,6 @@
     "url": "https://github.com/AlpacaTravel/react-map-gl-alt/issues"
   },
   "homepage": "https://github.com/AlpacaTravel/react-map-gl-alt#readme",
-  "dependencies": {},
   "dependencies": {
     "@mapbox/mapbox-gl-style-spec": "^10.0.0",
     "element-resize-event": "^3.0.3",
