@@ -80,10 +80,7 @@ class Map extends React.Component {
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       refreshExpiredTiles: !this.props.refreshExpiredTilesDisabled,
       trackResize: !this.props.trackResizeDisabled,
-      center: lngLatArray(this.props),
-      zoom: this.props.zoom,
-      bearing: this.props.bearing,
-      pitch: this.props.pitch,
+      
       bounds: this.props.bounds,
       maxBounds: this.props.maxBounds,
       renderWorldCopies: !this.props.renderWorldCopiesDisabled,
@@ -95,9 +92,37 @@ class Map extends React.Component {
       crossSourceCollisions: !this.props.crossSourceCollisionsDisabled,
     };
 
+    // Initialise the viewport
+    let updateMapViewport = null; // If we are going to call update on load
+    if (lngLatArray(this.props) && this.props.zoom) {
+      Object.assign(options, {
+        center: lngLatArray(this.props),
+        zoom: this.props.zoom,
+        bearing: this.props.bearing,
+        pitch: this.props.pitch,
+      });
+      // We have a bounds also set, let's move to it
+      if (has(this.props, 'bounds')) {
+        updateMapViewport = {
+          ...this.props,
+          move: this.props.move || defaultFitBoundsAction,
+        };
+      }
+    // If we have just a bounds on init
+    } else if (has(this.props, 'bounds')) {
+      Object.assign(options, {
+        bounds: this.props.bounds,
+      });
+    }
+
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
+
+    // If we have a next viewport action
+    if (updateMapViewport) {
+      this._updateMapViewport({}, updateMapViewport);
+    }
 
     // Initial actions
     this._updateConvenienceHandlers({}, this.props);
