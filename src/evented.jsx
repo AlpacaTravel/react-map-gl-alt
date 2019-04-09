@@ -46,10 +46,14 @@ export default class Evented {
       switch (type) {
         case 'resize':
         case 'remove':
+          listeners.forEach((listener) => {
+            listener();
+          });
+          break;
         case 'render':
         case 'load':
           listeners.forEach((listener) => {
-            listener();
+            listener({ target: this._mapAccessor });
           });
           break;
         // Safe errors
