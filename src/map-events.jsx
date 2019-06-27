@@ -7,8 +7,8 @@ class MapEvents extends React.Component {
     this._updateListeners({}, this.props);
   }
 
-  componentDidUpdate(nextProps) {
-    this._updateListeners(this.props, nextProps);
+  componentDidUpdate(prevProps) {
+    this._updateListeners(prevProps, this.props);
   }
 
   componentWillUnmount() {

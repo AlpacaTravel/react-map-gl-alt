@@ -111,12 +111,12 @@ class Map extends React.Component {
     elementResizedEvent(this.container, this._resizedContainer);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this._updateConvenienceHandlers(this.props, nextProps);
-    this._updateStyle(this.props.mapStyle, nextProps.mapStyle);
-    this._updateMapOptions(this.props, nextProps);
-    this._updateMapViewport(this.props, nextProps);
-    this._updateFeatureState(this.props, nextProps);
+  componentDidUpdate(prevProps) {
+    this._updateConvenienceHandlers(prevProps, this.props);
+    this._updateStyle(prevProps.mapStyle, this.props.mapStyle);
+    this._updateMapOptions(prevProps, this.props);
+    this._updateMapViewport(prevProps, this.props);
+    this._updateFeatureState(prevProps, this.props);
   }
 
   componentWillUnmount() {
