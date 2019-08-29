@@ -1,15 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
-import { default as elementResizedEvent, unbind as removeResizeListener } from 'element-resize-event';
+import React from "react";
+import PropTypes from "prop-types";
+import mapboxgl from "mapbox-gl";
+import {
+  default as elementResizedEvent,
+  unbind as removeResizeListener
+} from "element-resize-event";
 
-import MapFacade from './facades/map';
-import { diff, has, mod, lngLatArray } from './utils';
-import { updateOptions as updateMapOptions, performMoveAction } from './utils/map';
-import { getInteractiveLayerIds, update as updateStyle } from './utils/styles';
+import MapFacade from "./facades/map";
+import { diff, has, mod, lngLatArray } from "./utils";
+import {
+  updateOptions as updateMapOptions,
+  performMoveAction
+} from "./utils/map";
+import { getInteractiveLayerIds, update as updateStyle } from "./utils/styles";
 
-const defaultMoveAction = (target) => ({ command: 'flyTo', args: [target] });
-const defaultFitBoundsAction = (target) => ({ command: 'fitBounds', args: [target.bounds, { animate: false, duration: 100 }] });
+const defaultMoveAction = target => ({ command: "flyTo", args: [target] });
+const defaultFitBoundsAction = target => ({
+  command: "fitBounds",
+  args: [target.bounds, { animate: false, duration: 100 }]
+});
 
 class Map extends React.Component {
   static supported() {
@@ -36,10 +45,11 @@ class Map extends React.Component {
       startPitch: null,
       startZoom: null,
       userControlled: false,
-      featureStates: null,
+      featureStates: null
     };
 
-    const accessToken = props.mapboxApiAccessToken || context.mapboxApiAccessToken;
+    const accessToken =
+      props.mapboxApiAccessToken || context.mapboxApiAccessToken;
     if (accessToken) {
       mapboxgl.accessToken = accessToken;
     }
@@ -54,14 +64,16 @@ class Map extends React.Component {
   // Scrub map access to events
   getChildContext() {
     return {
-      map: this._mapFacade,
+      map: this._mapFacade
     };
   }
 
   componentDidMount() {
     // Create the local map
-    const mapStyle = (this.props.mapStyle && this.props.mapStyle.toJS &&
-      this.props.mapStyle.toJS()) ||
+    const mapStyle =
+      (this.props.mapStyle &&
+        this.props.mapStyle.toJS &&
+        this.props.mapStyle.toJS()) ||
       this.props.mapStyle;
 
     // Optionally use longitude/latitude without a center present
@@ -76,12 +88,14 @@ class Map extends React.Component {
       attributionControl: !this.props.attributionControlDisabled,
       customAttribution: this.props.customAttribution,
       logoPosition: this.props.logoPosition,
-      failIfMajorPerformanceCaveat: !this.props.failIfMajorPerformanceCaveatDisabled,
+      failIfMajorPerformanceCaveat: !this.props
+        .failIfMajorPerformanceCaveatDisabled,
       preserveDrawingBuffer: !this.props.preserveDrawingBufferDisabled,
       refreshExpiredTiles: !this.props.refreshExpiredTilesDisabled,
       trackResize: !this.props.trackResizeDisabled,
-      
+
       bounds: this.props.bounds,
+      fitBoundsOptions: this.props.fitBoundsOptions,
       maxBounds: this.props.maxBounds,
       renderWorldCopies: !this.props.renderWorldCopiesDisabled,
       maxTileCacheSize: this.props.maxTileCacheSize,
@@ -89,7 +103,7 @@ class Map extends React.Component {
       transformRequest: this.props.transformRequest,
       collectResourceTiming: !this.props.collectResourceTimingDisabled,
       fadeDuration: this.props.fadeDuration,
-      crossSourceCollisions: !this.props.crossSourceCollisionsDisabled,
+      crossSourceCollisions: !this.props.crossSourceCollisionsDisabled
     };
 
     // Initialise the viewport
@@ -99,19 +113,19 @@ class Map extends React.Component {
         center: lngLatArray(this.props),
         zoom: this.props.zoom,
         bearing: this.props.bearing,
-        pitch: this.props.pitch,
+        pitch: this.props.pitch
       });
       // We have a bounds also set, let's move to it
-      if (has(this.props, 'bounds')) {
+      if (has(this.props, "bounds")) {
         updateMapViewport = {
           ...this.props,
-          move: this.props.move || defaultFitBoundsAction,
+          move: this.props.move || defaultFitBoundsAction
         };
       }
-    // If we have just a bounds on init
-    } else if (has(this.props, 'bounds')) {
+      // If we have just a bounds on init
+    } else if (has(this.props, "bounds")) {
       Object.assign(options, {
-        bounds: this.props.bounds,
+        bounds: this.props.bounds
       });
     }
 
@@ -160,7 +174,7 @@ class Map extends React.Component {
 
   _getQueryParams() {
     return {
-      layerIds: getInteractiveLayerIds(this.props.mapStyle),
+      layerIds: getInteractiveLayerIds(this.props.mapStyle)
     };
   }
 
@@ -186,7 +200,7 @@ class Map extends React.Component {
     const boxSize = this.props.clickRadius;
     const bbox = [
       [e.point.x - boxSize, e.point.y - boxSize],
-      [e.point.x + boxSize, e.point.y + boxSize],
+      [e.point.x + boxSize, e.point.y + boxSize]
     ];
     this._simpleQuery(bbox, this.props.onClickFeatures);
   }
@@ -195,7 +209,10 @@ class Map extends React.Component {
     if (!this.props.trackResizeContainerDisabled && this._map) {
       this._map.resize();
       if (!this.props.forceResizeContainerViewportDisabled && this._map) {
-        this._updateMapViewport(this.props, { ...this.props, timestamp: Date.now() });
+        this._updateMapViewport(this.props, {
+          ...this.props,
+          timestamp: Date.now()
+        });
       }
     }
   }
@@ -235,21 +252,21 @@ class Map extends React.Component {
       startBearing: this.state.startBearing,
       startZoom: this.state.startZoom,
       isUserControlled: this.state.userControlled,
-      map: this._mapFacade,
+      map: this._mapFacade
     });
   }
 
   _listenStateEvents() {
-    this._map.on('movestart', (event) => {
+    this._map.on("movestart", event => {
       this.setState({
         startMoveLngLat: event.target.getCenter(),
         startBearing: event.target.getBearing(),
         startPitch: event.target.getPitch(),
         startZoom: event.target.getZoom(),
-        isUserControlled: (has(event, 'originalEvent')),
+        isUserControlled: has(event, "originalEvent")
       });
     });
-    this._map.on('moveend', (e) => {
+    this._map.on("moveend", e => {
       // Attempt to keep world within normal legal lng values
       // https://github.com/mapbox/mapbox-gl-js/issues/2071
       if (this.props.worldCopyJumpDisabled !== true) {
@@ -263,35 +280,35 @@ class Map extends React.Component {
         startBearing: null,
         startPitch: null,
         startZoom: null,
-        isUserControlled: false,
+        isUserControlled: false
       });
     });
 
-    this._map.on('dragstart', (event) => {
+    this._map.on("dragstart", event => {
       this.setState({ isDragging: true, startDragLngLat: event.lngLat });
     });
-    this._map.on('dragend', () => {
+    this._map.on("dragend", () => {
       this.setState({ isDragging: false, startDragLngLat: null });
     });
-    this._map.on('zoomstart', (event) => {
+    this._map.on("zoomstart", event => {
       this.setState({ isZooming: true, startZoomLngLat: event.lngLat });
     });
-    this._map.on('zoomend', () => {
+    this._map.on("zoomend", () => {
       this.setState({ isZooming: false, startZoomLngLat: null });
     });
-    this._map.on('touchstart', (event) => {
+    this._map.on("touchstart", event => {
       this.setState({ isTouching: true, startTouchLngLat: event.lngLat });
     });
-    this._map.on('touchend', () => {
+    this._map.on("touchend", () => {
       this.setState({ isTouching: false, startTouchLngLat: null });
     });
-    this._map.on('rotatestart', (event) => {
+    this._map.on("rotatestart", event => {
       this.setState({ isRotating: true, startRotatingLngLat: event.lngLat });
     });
-    this._map.on('rotateend', () => {
+    this._map.on("rotateend", () => {
       this.setState({ isRotating: false, startRotatingLngLat: null });
     });
-    this._map.on('load', () => {
+    this._map.on("load", () => {
       this.setState({ isLoaded: true });
       this._onChangeViewport({ target: this._mapFacade });
     });
@@ -306,27 +323,43 @@ class Map extends React.Component {
   }
 
   _updateFeatureState(prevProps, nextProps) {
-    if (diff('featureStates', prevProps, nextProps)) {
+    if (diff("featureStates", prevProps, nextProps)) {
       // Transform the function from [{ feature, state }] to { [feature]: { feature, state } }
-      const featureStates = fs => fs && Array.isArray(fs) && fs.reduce((c, t) =>
-        Object.assign({}, c, { [`${t.feature.source}:${t.feature.sourceLayer || ''}:${t.feature.id}`]: t }), {}) || {};
+      const featureStates = fs =>
+        (fs &&
+          Array.isArray(fs) &&
+          fs.reduce(
+            (c, t) =>
+              Object.assign({}, c, {
+                [`${t.feature.source}:${t.feature.sourceLayer || ""}:${
+                  t.feature.id
+                }`]: t
+              }),
+            {}
+          )) ||
+        {};
 
       // Reset existin
       const current = this.state.featureStates;
       const next = featureStates(nextProps.featureStates);
       if (current) {
         // Any non-matching states can be reset
-        Object.keys(current).filter(key => !next[key])
-          .forEach((key) => {
+        Object.keys(current)
+          .filter(key => !next[key])
+          .forEach(key => {
             // https://github.com/mapbox/mapbox-gl-js/issues/6889
-            const blankState = Object.keys(current[key].state).reduce((c, t) => Object.assign({}, c, { [t]: null }), {});
+            const blankState = Object.keys(current[key].state).reduce(
+              (c, t) => Object.assign({}, c, { [t]: null }),
+              {}
+            );
             this._map.setFeatureState(current[key].feature, blankState);
           });
       }
 
       // Any non-matching states can be reset
-      Object.keys(next)
-        .forEach((key) => this._map.setFeatureState(next[key].feature, next[key].state));
+      Object.keys(next).forEach(key =>
+        this._map.setFeatureState(next[key].feature, next[key].state)
+      );
 
       // Hold the feature state
       this.setState({ featureStates: next });
@@ -334,25 +367,25 @@ class Map extends React.Component {
   }
 
   _updateConvenienceHandlers(prevProps, nextProps) {
-    if (diff('onClickFeatures', prevProps, nextProps)) {
+    if (diff("onClickFeatures", prevProps, nextProps)) {
       if (nextProps.onClickFeatures) {
-        this._map.on('click', this._simpleClick);
+        this._map.on("click", this._simpleClick);
       } else {
-        this._map.off('click', this._simpleClick);
+        this._map.off("click", this._simpleClick);
       }
     }
-    if (diff('onHoverFeatures', prevProps, nextProps)) {
+    if (diff("onHoverFeatures", prevProps, nextProps)) {
       if (nextProps.onHoverFeatures) {
-        this._map.on('mousemove', this._simpleHover);
+        this._map.on("mousemove", this._simpleHover);
       } else {
-        this._map.off('mousemove', this._simpleHover);
+        this._map.off("mousemove", this._simpleHover);
       }
     }
-    if (diff('onChangeViewport', prevProps, nextProps)) {
+    if (diff("onChangeViewport", prevProps, nextProps)) {
       if (nextProps.onChangeViewport) {
-        this._map.on('move', this._onChangeViewport);
+        this._map.on("move", this._onChangeViewport);
       } else {
-        this._map.off('move', this._onChangeViewport);
+        this._map.off("move", this._onChangeViewport);
       }
     }
   }
@@ -367,19 +400,14 @@ class Map extends React.Component {
     const propsCenter = lngLatArray(prior);
     const nextPropsCenter = lngLatArray(next);
 
-    const viewportChanged = (
-      diff(
-        'center',
-        { center: propsCenter },
-        { center: nextPropsCenter }
-      ) ||
-      diff('bounds', prior, next) ||
-      diff('zoom', prior, next) ||
+    const viewportChanged =
+      diff("center", { center: propsCenter }, { center: nextPropsCenter }) ||
+      diff("bounds", prior, next) ||
+      diff("zoom", prior, next) ||
       // diff('altitude', this.props, nextProps) ||
-      diff('bearing', prior, next) ||
-      diff('pitch', prior, next) ||
-      diff('timestamp', prior, next)
-    );
+      diff("bearing", prior, next) ||
+      diff("pitch", prior, next) ||
+      diff("timestamp", prior, next);
 
     if (viewportChanged) {
       const target = {
@@ -391,7 +419,7 @@ class Map extends React.Component {
         // altitude: nextProps.altitude,
         bearing: next.bearing,
         pitch: next.pitch,
-        ...this.state,
+        ...this.state
       };
 
       // Use a move
@@ -408,7 +436,9 @@ class Map extends React.Component {
   render() {
     return (
       <div
-        ref={container => { this.container = container; }}
+        ref={container => {
+          this.container = container;
+        }}
         className="map"
         style={this.props.style}
       >
@@ -425,10 +455,8 @@ Map.propTypes = {
   mapboxApiAccessToken: PropTypes.string,
 
   // Main style
-  mapStyle: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
-  ]).isRequired,
+  mapStyle: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    .isRequired,
 
   // Move control actions
   move: PropTypes.func,
@@ -459,7 +487,7 @@ Map.propTypes = {
   // Target controls
   center: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.number),
-    PropTypes.instanceOf(mapboxgl.LngLat),
+    PropTypes.instanceOf(mapboxgl.LngLat)
   ]),
   zoom: PropTypes.number,
   // altitude: PropTypes.number,
@@ -468,8 +496,9 @@ Map.propTypes = {
   bounds: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
     PropTypes.arrayOf(PropTypes.number),
-    PropTypes.instanceOf(mapboxgl.LngLatBounds),
+    PropTypes.instanceOf(mapboxgl.LngLatBounds)
   ]),
+  fitBoundsOptions: PropTypes.object,
 
   minZoom: PropTypes.number,
   maxZoom: PropTypes.number,
@@ -495,7 +524,7 @@ Map.propTypes = {
   preserveDrawingBufferDisabled: PropTypes.bool,
   children: PropTypes.any,
 
-  featureStates: PropTypes.arrayOf(PropTypes.object),
+  featureStates: PropTypes.arrayOf(PropTypes.object)
 };
 
 Map.defaultProps = {
@@ -518,7 +547,7 @@ Map.defaultProps = {
   worldCopyJumpDisabled: true,
   forceResizeContainerViewportDisabled: false,
   crossSourceCollisionsDisabled: false,
-  logoPosition: 'bottom-left',
+  logoPosition: "bottom-left",
   refreshExpiredTilesDisabled: false,
   pitchWithRotate: true,
   clickTolerance: 3,
@@ -529,30 +558,28 @@ Map.defaultProps = {
   collectResourceTimingDisabled: true,
   transformRequest: null,
   renderWorldCopiesDisabled: false,
+  fitBoundsOptions: null,
 
   featureStates: [],
 
   bearingSnap: 7,
   mapClasses: [],
 
-  center: [
-    144.9633200,
-    -37.8140000,
-  ],
+  center: [144.96332, -37.814],
 
   zoom: 1,
   bearing: 0,
   pitch: 0,
 
-  clickRadius: 15,
+  clickRadius: 15
 };
 
 Map.childContextTypes = {
-  map: PropTypes.object,
+  map: PropTypes.object
 };
 
 Map.contextTypes = {
-  mapboxApiAccessToken: PropTypes.string,
+  mapboxApiAccessToken: PropTypes.string
 };
 
 export default Map;
