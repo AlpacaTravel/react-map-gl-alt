@@ -36,7 +36,7 @@
     "react-dom": "^16.2.0"
   },
   "peerDependencies": {
-    "mapbox-gl": "^0.54.0"
+    "mapbox-gl": "^1.5.0"
   },
   "devDependencies": {
     "@mapbox/mapbox-gl-style-spec": "^10.0.0",
@@ -59,7 +59,7 @@
     "json2mq": "^0.2.0",
     "lodash.has": "^4.5.2",
     "lodash.isequal": "^4.5.0",
-    "mapbox-gl": "^0.54.0",
+    "mapbox-gl": "^1.5.0",
     "prop-types": "^15.6.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
