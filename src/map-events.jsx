@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { diff } from './utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { diff } from "./utils";
 
 class MapEvents extends React.Component {
   componentDidMount() {
@@ -28,42 +28,52 @@ class MapEvents extends React.Component {
   }
 
   _updateListeners(current, next) {
-    this._updateListener('onStyleLoad', current, next);
-    this._updateListener('onResize', current, next);
-    this._updateListener('onWebGLContextLost', current, next);
-    this._updateListener('onWebGLContextRestored', current, next);
-    this._updateListener('onRemove', current, next);
-    this._updateListener('onDataLoading', current, next);
-    this._updateListener('onRender', current, next);
-    this._updateListener('onLoad', current, next);
-    this._updateListener('onData', current, next);
-    this._updateListener('onError', current, next);
-    this._updateListener('onMouseOut', current, next);
-    this._updateListener('onMouseDown', current, next);
-    this._updateListener('onMouseUp', current, next);
-    this._updateListener('onMouseMove', current, next);
-    this._updateListener('onTouchStart', current, next);
-    this._updateListener('onTouchEnd', current, next);
-    this._updateListener('onTouchMove', current, next);
-    this._updateListener('onTouchCancel', current, next);
-    this._updateListener('onClick', current, next);
-    this._updateListener('onDblClick', current, next);
-    this._updateListener('onContextMenu', current, next);
-    this._updateListener('onMoveStart', current, next);
-    this._updateListener('onMove', current, next);
-    this._updateListener('onMoveEnd', current, next);
-    this._updateListener('onZoomStart', current, next);
-    this._updateListener('onZoomEnd', current, next);
-    this._updateListener('onZoom', current, next);
-    this._updateListener('onBoxZoomCancel', current, next);
-    this._updateListener('onBoxZoomEnd', current, next);
-    this._updateListener('onBoxZoomStart', current, next);
-    this._updateListener('onRotateStart', current, next);
-    this._updateListener('onRotateEnd', current, next);
-    this._updateListener('onDragStart', current, next);
-    this._updateListener('onDragEnd', current, next);
-    this._updateListener('onDrag', current, next);
-    this._updateListener('onPitch', current, next);
+    this._updateListener("onStyleLoad", current, next);
+    this._updateListener("onResize", current, next);
+    this._updateListener("onWebGLContextLost", current, next);
+    this._updateListener("onWebGLContextRestored", current, next);
+    this._updateListener("onRemove", current, next);
+    this._updateListener("onDataLoading", current, next);
+    this._updateListener("onRender", current, next);
+    this._updateListener("onLoad", current, next);
+    this._updateListener("onData", current, next);
+    this._updateListener("onError", current, next);
+    this._updateListener("onMouseOut", current, next);
+    this._updateListener("onMouseDown", current, next);
+    this._updateListener("onMouseUp", current, next);
+    this._updateListener("onMouseMove", current, next);
+    this._updateListener("onTouchStart", current, next);
+    this._updateListener("onTouchEnd", current, next);
+    this._updateListener("onTouchMove", current, next);
+    this._updateListener("onTouchCancel", current, next);
+    this._updateListener("onClick", current, next);
+    this._updateListener("onDblClick", current, next);
+    this._updateListener("onContextMenu", current, next);
+    this._updateListener("onMoveStart", current, next);
+    this._updateListener("onMove", current, next);
+    this._updateListener("onMoveEnd", current, next);
+    this._updateListener("onZoomStart", current, next);
+    this._updateListener("onZoomEnd", current, next);
+    this._updateListener("onZoom", current, next);
+    this._updateListener("onBoxZoomCancel", current, next);
+    this._updateListener("onBoxZoomEnd", current, next);
+    this._updateListener("onBoxZoomStart", current, next);
+    this._updateListener("onRotateStart", current, next);
+    this._updateListener("onRotateEnd", current, next);
+    this._updateListener("onDragStart", current, next);
+    this._updateListener("onDragEnd", current, next);
+    this._updateListener("onDrag", current, next);
+    this._updateListener("onPitchStart", current, next);
+    this._updateListener("onPitchEnd", current, next);
+    this._updateListener("onPitch", current, next);
+    this._updateListener("onWheel", current, next);
+    this._updateListener("onIdle", current, next);
+    this._updateListener("onStyleData", current, next);
+    this._updateListener("onSourceData", current, next);
+    this._updateListener("onDataLoading", current, next);
+    this._updateListener("onStyleDataLoading", current, next);
+    this._updateListener("onSourceDataLoading", current, next);
+    this._updateListener("onStyleImageMissing", current, next);
   }
 
   render() {
@@ -81,14 +91,21 @@ MapEvents.propTypes = {
   onDataLoading: PropTypes.func,
   onRender: PropTypes.func,
   onLoad: PropTypes.func,
+  onIdle: PropTypes.func,
   onData: PropTypes.func,
   onError: PropTypes.func,
+  onStyleData: PropTypes.func,
+  onSourceData: PropTypes.func,
+  onStyleDataLoading: PropTypes.func,
+  onSourceDataLoading: PropTypes.func,
+  onStyleImageMissing: PropTypes.func,
 
   // Interactive events
   onMouseOut: PropTypes.func,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   onMouseMove: PropTypes.func,
+  onWheel: PropTypes.func,
 
   onTouchStart: PropTypes.func,
   onTouchEnd: PropTypes.func,
@@ -118,11 +135,13 @@ MapEvents.propTypes = {
   onDragEnd: PropTypes.func,
   onDrag: PropTypes.func,
 
-  onPitch: PropTypes.func,
+  onPitchStart: PropTypes.func,
+  onPitchEnd: PropTypes.func,
+  onPitch: PropTypes.func
 };
 
 MapEvents.contextTypes = {
-  map: PropTypes.object.isRequired,
+  map: PropTypes.object.isRequired
 };
 
 export default MapEvents;
