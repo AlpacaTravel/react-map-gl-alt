@@ -132,6 +132,9 @@ class Map extends React.Component {
     // Create the map and configure the map options
     this._map = new mapboxgl.Map(options);
     this._mapFacade = new MapFacade(this._map);
+    if (this.props.onMap && typeof this.props.onMap === "function") {
+      this.props.onMap(this._mapFacade);
+    }
 
     // If we have a next viewport action
     if (updateMapViewport) {
@@ -524,7 +527,8 @@ Map.propTypes = {
   preserveDrawingBufferDisabled: PropTypes.bool,
   children: PropTypes.any,
 
-  featureStates: PropTypes.arrayOf(PropTypes.object)
+  featureStates: PropTypes.arrayOf(PropTypes.object),
+  onMap: PropTypes.func
 };
 
 Map.defaultProps = {
@@ -559,6 +563,7 @@ Map.defaultProps = {
   transformRequest: null,
   renderWorldCopiesDisabled: false,
   fitBoundsOptions: null,
+  onMap: null,
 
   featureStates: [],
 
