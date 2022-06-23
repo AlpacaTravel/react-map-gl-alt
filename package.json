@@ -54,7 +54,7 @@
     "eslint-plugin-react": "^5.1.1",
     "gl": "^4.0.2",
     "istanbul": "^0.4.5",
-    "jsdom": "^9.6.0",
+    "jsdom": "^16.5.0",
     "json-loader": "^0.5.4",
     "json2mq": "^0.2.0",
     "lodash.has": "^4.5.2",
